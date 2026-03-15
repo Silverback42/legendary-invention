@@ -93,10 +93,10 @@ class AppDatabase extends _$AppDatabase {
     final endDate = DateTime(year, month + 1, 1);
 
     final catId = transactions.categoryId;
-    final amt = transactions.amount;
+    final total = transactions.amount.sum();
 
     final query = selectOnly(transactions)
-      ..addColumns([catId, amt.sum()])
+      ..addColumns([catId, total])
       ..where(
         transactions.date.isBiggerOrEqualValue(startDate) &
         transactions.date.isSmallerThanValue(endDate),
@@ -106,7 +106,7 @@ class AppDatabase extends _$AppDatabase {
     final rows = await query.get();
     return {
       for (final row in rows)
-        row.read(catId)!: (row.read(amt.sum()) ?? 0.0),
+        row.read(catId)!: (row.read(total) ?? 0.0),
     };
   }
 
