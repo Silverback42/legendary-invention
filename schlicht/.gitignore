@@ -23,7 +23,6 @@ android/app/*.jks
 android/app/google-services.json
 
 # iOS
-ios/Podfile.lock
 ios/.symlinks/
 ios/Flutter/flutter_export_environment.sh
 ios/Flutter/Flutter.framework
@@ -46,6 +45,7 @@ macos/Flutter/flutter_export_environment.sh
 # Secrets & environment files
 .env
 .env.*
+!.env.example
 google-services.json
 GoogleService-Info.plist
 

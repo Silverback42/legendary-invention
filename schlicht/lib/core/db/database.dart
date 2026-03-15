@@ -167,6 +167,9 @@ class AppDatabase extends _$AppDatabase {
   // Utilities
   // ---------------------------------------------------------------------------
 
+  /// Clears all transactional and budget data.
+  /// Deliberately preserves [categories] and [accounts] as they represent
+  /// user configuration, not transactional records.
   Future<void> clearAllData() async {
     await delete(transactions).go();
     await delete(budgets).go();

@@ -151,7 +151,7 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 
 ### Offline-First verifizieren (R-005)
 - [ ] Alle Features ohne Internet testen
-- [ ] Keine Netzwerk-Abhaengigkeiten in Phase 1
+- [ ] Keine Netzwerk-Abhängigkeiten in Phase 1
 - [ ] Drift-DB als alleinige Source of Truth bestätigen
 
 ---
