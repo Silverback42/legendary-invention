@@ -1,13 +1,27 @@
-.env
+# Dependencies
 node_modules/
-browse/dist/
-.gstack/
-.claude/skills/
-/tmp/
-*.log
-bun.lock
-*.bun-build
+
+# Flutter
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Environment
 .env
 .env.local
 .env.*
 !.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
