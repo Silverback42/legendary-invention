@@ -120,22 +120,31 @@ class AppDatabase extends _$AppDatabase {
           .watch();
 
   /// Upserts a budget row while preserving the existing row's id on conflict.
-  Future<int> insertBudget(BudgetsCompanion entry) async {
-    final existing = await (select(budgets)
-          ..where(
-            (b) =>
-                b.categoryId.equals(entry.categoryId.value) &
-                b.month.equals(entry.month.value) &
-                b.year.equals(entry.year.value),
-          ))
-        .getSingleOrNull();
+  /// The entire read-then-write is wrapped in a transaction to prevent races.
+  Future<int> insertBudget(BudgetsCompanion entry) {
+    return transaction(() async {
+      final existing = await (select(budgets)
+            ..where(
+              (b) =>
+                  b.categoryId.equals(entry.categoryId.value) &
+                  b.month.equals(entry.month.value) &
+                  b.year.equals(entry.year.value),
+            ))
+          .getSingleOrNull();
 
-    if (existing != null) {
-      final updated = entry.copyWith(id: Value(existing.id));
-      await update(budgets).replace(updated);
-      return existing.id;
-    }
-    return into(budgets).insert(entry);
+      if (existing != null) {
+        final updated = BudgetsCompanion(
+          id: Value(existing.id),
+          categoryId: entry.categoryId,
+          amount: entry.amount,
+          month: entry.month,
+          year: entry.year,
+        );
+        await update(budgets).replace(updated);
+        return existing.id;
+      }
+      return into(budgets).insert(entry);
+    });
   }
 
   Future<int> deleteBudget(int id) =>
