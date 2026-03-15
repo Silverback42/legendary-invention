@@ -15,15 +15,15 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 ## Phase 0: Projekt-Setup & Architektur (Woche 1)
 
 ### Flutter-Projekt initialisieren
-- [ ] Flutter-Projekt erstellen (`flutter create --org com.schlichtapp schlicht`)
-- [ ] Minimale `pubspec.yaml` mit Kern-Dependencies (drift, fl_chart, riverpod/bloc, flutter_localizations)
-- [ ] Ordnerstruktur anlegen (lib/features/, lib/core/, lib/shared/)
-- [ ] .gitignore fuer Flutter einrichten
-- [ ] Linting-Regeln definieren (analysis_options.yaml)
+- [x] Flutter-Projekt erstellen (`flutter create --org com.schlichtapp schlicht`) -- Projektstruktur manuell angelegt (Flutter CLI nicht verfügbar)
+- [x] Minimale `pubspec.yaml` mit Kern-Dependencies (drift, fl_chart, riverpod, flutter_localizations)
+- [x] Ordnerstruktur anlegen (lib/features/, lib/core/, lib/shared/)
+- [x] .gitignore fuer Flutter einrichten
+- [x] Linting-Regeln definieren (analysis_options.yaml)
 
 ### Architektur-Grundgeruest
-- [ ] State-Management-Ansatz festlegen und einrichten (Riverpod empfohlen)
-- [ ] Feature-basierte Ordnerstruktur anlegen:
+- [x] State-Management-Ansatz festlegen und einrichten (Riverpod -- flutter_riverpod + riverpod_annotation)
+- [x] Feature-basierte Ordnerstruktur anlegen:
   ```
   lib/
     core/           # DB, Theme, Routing, i18n
@@ -35,22 +35,22 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
       settings/     # Einstellungen
     shared/         # Widgets, Utils, Extensions
   ```
-- [ ] Routing einrichten (go_router)
-- [ ] Theme-System aufsetzen (Farben, Typografie, Spacing -- ein Light-Theme)
+- [x] Routing einrichten (go_router) -- lib/core/routing/app_router.dart
+- [x] Theme-System aufsetzen (Farben, Typografie, Spacing -- ein Light-Theme) -- lib/core/theme/app_theme.dart
 
 ### Datenbank-Grundlage
-- [ ] Drift-Setup (SQLite) mit erstem Schema:
+- [x] Drift-Setup (SQLite) mit erstem Schema:
   - Tabelle `categories` (id, name, icon, color, sort_order, is_default)
   - Tabelle `transactions` (id, amount, category_id, note, date, created_at)
   - Tabelle `budgets` (id, category_id, amount, month, year)
   - Tabelle `accounts` (id, name, type, is_default)
-- [ ] Drift-Codegenerierung konfigurieren (build_runner)
-- [ ] Datenbank-Service/Repository-Pattern implementieren
-- [ ] Standard-Kategorien als Seed-Daten (8 Stueck: Lebensmittel, Wohnen, Transport, Freizeit, Gesundheit, Shopping, Essen gehen, Sonstiges)
+- [x] Drift-Codegenerierung konfigurieren (build_runner) -- in pubspec.yaml unter dev_dependencies
+- [x] Datenbank-Service/Repository-Pattern implementieren -- lib/core/db/database.dart
+- [x] Standard-Kategorien als Seed-Daten (8 Stueck: Lebensmittel, Wohnen, Transport, Freizeit, Gesundheit, Shopping, Essen gehen, Sonstiges) -- lib/core/db/seed_data.dart
 
 ### Lokalisierung
-- [ ] Flutter-i18n-Setup (flutter_localizations + intl)
-- [ ] Erste Strings auf Deutsch + Englisch (App-Name, Navigations-Labels, Kategorien)
+- [x] Flutter-i18n-Setup (flutter_localizations + intl)
+- [x] Erste Strings auf Deutsch + Englisch (App-Name, Navigations-Labels, Kategorien) -- lib/l10n/app_de.arb + app_en.arb
 
 ---
 
@@ -337,7 +337,7 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 
 | Phase | Status | Zeitrahmen |
 |-------|--------|------------|
-| Phase 0: Setup & Architektur | Offen | Woche 1 |
+| Phase 0: Setup & Architektur | **Abgeschlossen** | Woche 1 |
 | Phase 1a: Manuelle Eingabe (Kern-MVP) | Offen | Woche 2-3 |
 | Phase 1b: Visualisierung & Budgets | Offen | Woche 4-5 |
 | Phase 1c: Onboarding & Polish | Offen | Woche 6-7 |
