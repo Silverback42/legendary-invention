@@ -87,6 +87,9 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteTransaction(int id) =>
       (delete(transactions)..where((t) => t.id.equals(id))).go();
 
+  Future<Transaction?> getTransactionById(int id) =>
+      (select(transactions)..where((t) => t.id.equals(id))).getSingleOrNull();
+
   /// Returns total spending per category for a given month via a grouped SQL query.
   Future<Map<int, double>> getSpendingByCategory(int year, int month) async {
     final startDate = DateTime(year, month, 1);

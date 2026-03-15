@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/providers/settings_provider.dart';
 import '../../core/routing/app_router.dart';
 
-class MainScaffold extends StatelessWidget {
+class MainScaffold extends ConsumerWidget {
   final Widget child;
 
   const MainScaffold({super.key, required this.child});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final settings = ref.watch(settingsProvider);
     final location = GoRouterState.of(context).matchedLocation;
     final currentIndex = _indexForLocation(location);
 
     return Scaffold(
       body: child,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push(AppRoutes.addTransaction),
+        onPressed: () => _openAddTransaction(context, settings.inputMode),
         tooltip: l10n.addTransaction,
         child: const Icon(Icons.add, size: 28),
       ),
@@ -52,11 +55,19 @@ class MainScaffold extends StatelessWidget {
     );
   }
 
+  void _openAddTransaction(BuildContext context, InputMode mode) {
+    if (mode == InputMode.monthly) {
+      context.push(AppRoutes.addMonthlyTotals);
+    } else {
+      context.push(AppRoutes.addTransaction);
+    }
+  }
+
   int _indexForLocation(String location) {
     if (location.startsWith(AppRoutes.transactions)) return 1;
     if (location.startsWith(AppRoutes.budgets)) return 2;
     if (location.startsWith(AppRoutes.settings)) return 3;
-    return 0; // dashboard
+    return 0;
   }
 
   void _onNavTap(BuildContext context, int index) {
