@@ -1,0 +1,90 @@
+{
+  "@@locale": "de",
+  "appName": "Schlicht",
+  "@appName": { "description": "The application name" },
+
+  "navDashboard": "Übersicht",
+  "navTransactions": "Ausgaben",
+  "navBudgets": "Budgets",
+  "navSettings": "Einstellungen",
+
+  "addTransaction": "Ausgabe erfassen",
+  "editTransaction": "Ausgabe bearbeiten",
+  "deleteTransaction": "Ausgabe löschen",
+  "deleteTransactionConfirm": "Diese Ausgabe wirklich löschen?",
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "save": "Speichern",
+  "done": "Fertig",
+
+  "amount": "Betrag",
+  "category": "Kategorie",
+  "note": "Notiz (optional)",
+  "date": "Datum",
+  "today": "Heute",
+  "yesterday": "Gestern",
+
+  "categoryGroceries": "Lebensmittel",
+  "categoryHousing": "Wohnen",
+  "categoryTransport": "Transport",
+  "categoryLeisure": "Freizeit",
+  "categoryHealth": "Gesundheit",
+  "categoryShopping": "Shopping",
+  "categoryDiningOut": "Essen gehen",
+  "categoryOther": "Sonstiges",
+
+  "thisMonth": "Dieser Monat",
+  "totalSpending": "Gesamtausgaben",
+  "budgetRemaining": "Noch verfügbar",
+  "budgetOver": "Budget überschritten",
+  "recentTransactions": "Letzte Ausgaben",
+  "noTransactionsYet": "Noch keine Ausgaben diesen Monat.",
+  "noTransactionsSubtitle": "Tippe auf +, um die erste Ausgabe zu erfassen.",
+
+  "budgetFor": "Budget für {category}",
+  "@budgetFor": {
+    "placeholders": { "category": { "type": "String" } }
+  },
+  "setBudget": "Budget festlegen",
+  "noBudgetsYet": "Noch keine Budgets gesetzt.",
+  "noBudgetsSubtitle": "Lege Limits fest, um den Überblick zu behalten.",
+
+  "budgetAlmostReached": "Fast geschafft!",
+  "budgetReached": "Top – Ziel erreicht!",
+
+  "currency": "Währung",
+  "language": "Sprache",
+  "inputMode": "Eingabemodus",
+  "inputModeSingle": "Einzeltransaktion",
+  "inputModeMonthly": "Monatssummen",
+  "clearAllData": "Alle Daten löschen",
+  "clearAllDataConfirm": "Wirklich alle Daten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "appVersion": "Version",
+
+  "currencyEur": "Euro (€)",
+  "currencyChf": "Schweizer Franken (CHF)",
+
+  "languageDe": "Deutsch",
+  "languageEn": "English",
+
+  "shareMonth": "Monat teilen",
+  "shareMonthSubtitle": "Teile deine Monatsübersicht mit Freunden.",
+
+  "validationAmountRequired": "Bitte gib einen Betrag ein.",
+  "validationAmountPositive": "Der Betrag muss größer als 0 sein.",
+  "validationCategoryRequired": "Bitte wähle eine Kategorie aus.",
+
+  "genericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+
+  "dashboardMonthTooltip": "Monat wählen",
+  "dashboardPlaceholderTitle": "Dashboard – Phase 1a",
+
+  "settingsTitle": "Einstellungen",
+  "settingsPlaceholderTitle": "Einstellungen – Phase 1a",
+
+  "transactionAddTitle": "Ausgabe erfassen",
+  "quickEntryPlaceholderTitle": "Quick-Entry – Phase 1a",
+
+  "transactionsTitle": "Ausgaben",
+  "transactionsListPlaceholderTitle": "Transaktionsliste – Phase 1a"
+}

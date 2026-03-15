@@ -1,0 +1,90 @@
+{
+  "@@locale": "en",
+  "appName": "Schlicht",
+  "@appName": { "description": "The application name" },
+
+  "navDashboard": "Overview",
+  "navTransactions": "Transactions",
+  "navBudgets": "Budgets",
+  "navSettings": "Settings",
+
+  "addTransaction": "Add expense",
+  "editTransaction": "Edit expense",
+  "deleteTransaction": "Delete expense",
+  "deleteTransactionConfirm": "Really delete this expense?",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "save": "Save",
+  "done": "Done",
+
+  "amount": "Amount",
+  "category": "Category",
+  "note": "Note (optional)",
+  "date": "Date",
+  "today": "Today",
+  "yesterday": "Yesterday",
+
+  "categoryGroceries": "Groceries",
+  "categoryHousing": "Housing",
+  "categoryTransport": "Transport",
+  "categoryLeisure": "Leisure",
+  "categoryHealth": "Health",
+  "categoryShopping": "Shopping",
+  "categoryDiningOut": "Dining out",
+  "categoryOther": "Other",
+
+  "thisMonth": "This month",
+  "totalSpending": "Total spending",
+  "budgetRemaining": "Remaining",
+  "budgetOver": "Over budget",
+  "recentTransactions": "Recent expenses",
+  "noTransactionsYet": "No expenses this month yet.",
+  "noTransactionsSubtitle": "Tap + to add your first expense.",
+
+  "budgetFor": "Budget for {category}",
+  "@budgetFor": {
+    "placeholders": { "category": { "type": "String" } }
+  },
+  "setBudget": "Set budget",
+  "noBudgetsYet": "No budgets set yet.",
+  "noBudgetsSubtitle": "Set limits to stay on track.",
+
+  "budgetAlmostReached": "Almost there!",
+  "budgetReached": "Goal reached – great job!",
+
+  "currency": "Currency",
+  "language": "Language",
+  "inputMode": "Input mode",
+  "inputModeSingle": "Single transaction",
+  "inputModeMonthly": "Monthly totals",
+  "clearAllData": "Clear all data",
+  "clearAllDataConfirm": "Really delete all data? This action cannot be undone.",
+  "appVersion": "Version",
+
+  "currencyEur": "Euro (€)",
+  "currencyChf": "Swiss Franc (CHF)",
+
+  "languageDe": "Deutsch",
+  "languageEn": "English",
+
+  "shareMonth": "Share month",
+  "shareMonthSubtitle": "Share your monthly summary with friends.",
+
+  "validationAmountRequired": "Please enter an amount.",
+  "validationAmountPositive": "Amount must be greater than 0.",
+  "validationCategoryRequired": "Please select a category.",
+
+  "genericError": "Something went wrong. Please try again.",
+
+  "dashboardMonthTooltip": "Select month",
+  "dashboardPlaceholderTitle": "Dashboard – Phase 1a",
+
+  "settingsTitle": "Settings",
+  "settingsPlaceholderTitle": "Settings – Phase 1a",
+
+  "transactionAddTitle": "Add expense",
+  "quickEntryPlaceholderTitle": "Quick-Entry – Phase 1a",
+
+  "transactionsTitle": "Transactions",
+  "transactionsListPlaceholderTitle": "Transactions list – Phase 1a"
+}

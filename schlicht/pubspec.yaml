@@ -1,0 +1,74 @@
+name: schlicht
+description: Minimalist budget app for the DACH region
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.19.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Database
+  drift: ^2.18.0
+  sqlite3_flutter_libs: ^0.5.24
+  path_provider: ^2.1.3
+  path: ^1.9.0
+
+  # Routing
+  go_router: ^13.2.0
+
+  # Charts
+  fl_chart: ^0.68.0
+
+  # Payments & Subscriptions
+  purchases_flutter: ^7.2.3  # RevenueCat
+
+  # Notifications
+  firebase_core: ^3.0.0
+  firebase_messaging: ^15.0.0
+  flutter_local_notifications: ^17.1.2
+
+  # Sharing
+  share_plus: ^9.0.0
+
+  # Image Picker (Phase 1.5)
+  image_picker: ^1.1.1
+
+  # Home Screen Widget (Phase 1d)
+  home_widget: ^0.6.0
+
+  # Utils
+  intl: ^0.19.0
+  uuid: ^4.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+  # Code generation
+  build_runner: ^2.4.9
+  drift_dev: ^2.18.0
+  riverpod_generator: ^2.4.0
+  custom_lint: ^0.6.4
+  riverpod_lint: ^2.3.10
+
+flutter:
+  uses-material-design: true
+
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+
+  fonts: []
