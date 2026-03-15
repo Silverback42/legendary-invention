@@ -1,13 +1,13 @@
-# Schlicht -- Projekt-Implementierungsplan
+# Schlicht – Projekt-Implementierungsplan
 
 ## Context
 
-Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfield-Projekt -- kein Code vorhanden. Der Plan ist so strukturiert, dass die erste Version nur manuelle Eingabe unterstuetzt (Einzeltransaktionen oder Monatssummen). Danach kommen schrittweise Features dazu. Jede Phase baut auf der vorherigen auf und ist eigenstaendig nutzbar.
+Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfield-Projekt – kein Code vorhanden. Der Plan ist so strukturiert, dass die erste Version nur manuelle Eingabe unterstützt (Einzeltransaktionen oder Monatssummen). Danach kommen schrittweise Features dazu. Jede Phase baut auf der vorherigen auf und ist eigenständig nutzbar.
 
 ## Betroffene Dateien
 
-- `PRD-BudgetApp.md` -- Anforderungsquelle
-- `Marktanalyse.md` -- Markt-Kontext
+- `PRD-BudgetApp.md` – Anforderungsquelle
+- `Marktanalyse.md` – Markt-Kontext
 - Alle neuen Dateien werden im Flutter-Projekt erstellt
 
 ---
@@ -15,14 +15,14 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 ## Phase 0: Projekt-Setup & Architektur (Woche 1)
 
 ### Flutter-Projekt initialisieren
-- [x] Flutter-Projekt erstellen (`flutter create --org com.schlichtapp schlicht`) -- Projektstruktur manuell angelegt (Flutter CLI nicht verfügbar)
+- [x] Flutter-Projekt erstellen (`flutter create --org com.schlichtapp schlicht`) – Projektstruktur manuell angelegt (Flutter CLI nicht verfügbar)
 - [x] Minimale `pubspec.yaml` mit Kern-Dependencies (drift, fl_chart, riverpod, flutter_localizations)
 - [x] Ordnerstruktur anlegen (lib/features/, lib/core/, lib/shared/)
-- [x] .gitignore fuer Flutter einrichten
+- [x] .gitignore für Flutter einrichten
 - [x] Linting-Regeln definieren (analysis_options.yaml)
 
-### Architektur-Grundgeruest
-- [x] State-Management-Ansatz festlegen und einrichten (Riverpod -- flutter_riverpod + riverpod_annotation)
+### Architektur-Grundgerüst
+- [x] State-Management-Ansatz festlegen und einrichten (Riverpod – flutter_riverpod + riverpod_annotation)
 - [x] Feature-basierte Ordnerstruktur anlegen:
   ```
   lib/
@@ -35,8 +35,8 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
       settings/     # Einstellungen
     shared/         # Widgets, Utils, Extensions
   ```
-- [x] Routing einrichten (go_router) -- lib/core/routing/app_router.dart
-- [x] Theme-System aufsetzen (Farben, Typografie, Spacing -- ein Light-Theme) -- lib/core/theme/app_theme.dart
+- [x] Routing einrichten (go_router) – lib/core/routing/app_router.dart
+- [x] Theme-System aufsetzen (Farben, Typografie, Spacing – ein Light-Theme) – lib/core/theme/app_theme.dart
 
 ### Datenbank-Grundlage
 - [x] Drift-Setup (SQLite) mit erstem Schema:
@@ -44,13 +44,13 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
   - Tabelle `transactions` (id, amount, category_id, note, date, created_at)
   - Tabelle `budgets` (id, category_id, amount, month, year)
   - Tabelle `accounts` (id, name, type, is_default)
-- [x] Drift-Codegenerierung konfigurieren (build_runner) -- in pubspec.yaml unter dev_dependencies
-- [x] Datenbank-Service/Repository-Pattern implementieren -- lib/core/db/database.dart
-- [x] Standard-Kategorien als Seed-Daten (8 Stueck: Lebensmittel, Wohnen, Transport, Freizeit, Gesundheit, Shopping, Essen gehen, Sonstiges) -- lib/core/db/seed_data.dart
+- [x] Drift-Codegenerierung konfigurieren (build_runner) – in pubspec.yaml unter dev_dependencies
+- [x] Datenbank-Service/Repository-Pattern implementieren – lib/core/db/database.dart
+- [x] Standard-Kategorien als Seed-Daten (8 Stück: Lebensmittel, Wohnen, Transport, Freizeit, Gesundheit, Shopping, Essen gehen, Sonstiges) – lib/core/db/seed_data.dart
 
 ### Lokalisierung
 - [x] Flutter-i18n-Setup (flutter_localizations + intl)
-- [x] Erste Strings auf Deutsch + Englisch (App-Name, Navigations-Labels, Kategorien) -- lib/l10n/app_de.arb + app_en.arb
+- [x] Erste Strings auf Deutsch + Englisch (App-Name, Navigations-Labels, Kategorien) – lib/l10n/app_de.arb + app_en.arb
 
 ---
 
@@ -64,8 +64,8 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 - [ ] Optionales Notiz-Feld
 - [ ] Datum-Auswahl (Standard: heute)
 - [ ] Speichern-Button -- Transaktion in Drift-DB schreiben
-- [ ] Eingabe in ≤ 3 Taps abschliessbar
-- [ ] Validierung: Betrag > 0, Kategorie ausgewaehlt
+- [ ] Eingabe in ≤ 3 Taps abschließbar
+- [ ] Validierung: Betrag > 0, Kategorie ausgewählt
 
 ### Monatssummen-Eingabe (User-Wunsch)
 - [ ] Alternativer Eingabe-Modus: Gesamtsumme pro Kategorie fuer einen Monat
@@ -112,7 +112,7 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 - [ ] Fortschrittsbalken pro Kategorie auf Dashboard
 - [ ] Farbwechsel bei 80 % (Orange) und 100 % (Rot, aber sanft)
 - [ ] Verbleibendes Gesamtbudget prominent auf Dashboard
-- [ ] Ermutigende Microcopy bei Budgetueberschreitung (R-014): "Fast geschafft!" statt "Budget ueberschritten!"
+- [ ] Ermutigende Microcopy bei Budgetüberschreitung (R-014): "Fast geschafft!" statt "Budget überschritten!"
 
 ### Historien-Ansicht (R-009)
 - [ ] Monatsweise Navigation (3 Monate zurueck fuer Free-Tier)
@@ -122,7 +122,7 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 ### Dashboard aufwerten
 - [ ] Bento-Grid-Layout (R-007): Karten fuer Budget, Top-Kategorie, Monatsvergleich
 - [ ] Clean-Modern-Design umsetzen: Whitespace, 2 Akzentfarben, klare Typografie
-- [ ] WCAG 2.1 AA pruefen (4,5:1 Kontrast, 44x44px Touch-Targets)
+- [ ] WCAG 2.1 AA prüfen (4,5:1 Kontrast, 44x44px Touch-Targets)
 
 ---
 
@@ -138,21 +138,21 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 
 ### Kategorien verwalten
 - [ ] Kategorien umbenennen
-- [ ] Kategorien-Reihenfolge aendern (Drag & Drop)
-- [ ] Eigene Kategorien hinzufuegen (Premium, max. 8 im Free-Tier)
+- [ ] Kategorien-Reihenfolge ändern (Drag & Drop)
+- [ ] Eigene Kategorien hinzufügen (Premium, max. 8 im Free-Tier)
 - [ ] Kategorie-Icons aus vordefinierter Auswahl
 
 ### Design-Polish
-- [ ] Uebergangs-Animationen zwischen Screens
+- [ ] Übergangs-Animationen zwischen Screens
 - [ ] Skeleton-Screens statt Ladekreisel
-- [ ] Leere Zustaende huebsch gestalten (Illustrationen oder motivierende Texte)
+- [ ] Leere Zustände hübsch gestalten (Illustrationen oder motivierende Texte)
 - [ ] Splash-Screen mit Logo
 - [ ] App-Icon designen und einbinden
 
 ### Offline-First verifizieren (R-005)
 - [ ] Alle Features ohne Internet testen
 - [ ] Keine Netzwerk-Abhaengigkeiten in Phase 1
-- [ ] Drift-DB als alleinige Source of Truth bestaetigen
+- [ ] Drift-DB als alleinige Source of Truth bestätigen
 
 ---
 
@@ -213,10 +213,10 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 - [ ] Als Marketing-Moment kommunizieren: "Dark Mode ist da!"
 
 ### Wiederkehrende Ausgaben (R-013)
-- [ ] Frequenz-Auswahl: woechentlich / monatlich / jaehrlich
-- [ ] Automatische Buchung am gewaehlten Tag
-- [ ] Bearbeiten / Loeschen (nur zukuenftige / alle)
-- [ ] Uebersicht aller wiederkehrenden Ausgaben in Einstellungen
+- [ ] Frequenz-Auswahl: wöchentlich / monatlich / jährlich
+- [ ] Automatische Buchung am gewählten Tag
+- [ ] Bearbeiten / Löschen (nur zukünftige / alle)
+- [ ] Übersicht aller wiederkehrenden Ausgaben in Einstellungen
 
 ### Kassenbon-Foto (R-016)
 - [ ] Kamera-Integration (image_picker)
@@ -245,7 +245,7 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 - [ ] Auth-System: Email/Passwort + Apple Sign-In + Google Sign-In
 - [ ] Datenbank-Schema auf Supabase spiegeln (PostgreSQL)
 - [ ] Sync-Logik: Lokale Drift-DB ↔ Supabase (Conflict Resolution)
-- [ ] End-to-End-Verschluesselung fuer Finanzdaten
+- [ ] End-to-End-Verschlüsselung für Finanzdaten
 - [ ] Sync-Status-Anzeige in App
 - [ ] Offline-Edits korrekt synchronisieren
 
@@ -261,7 +261,7 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 - [ ] Einladung per Link / QR-Code
 - [ ] Echtzeit-Sync zwischen Partnern
 - [ ] Individuelle + gemeinsame Budget-Ansicht
-- [ ] Berechtigungen: Beide hinzufuegen, Budget-Aenderung nur Ersteller
+- [ ] Berechtigungen: Beide hinzufügen, Budget-Änderung nur Ersteller
 - [ ] Split-Ansicht: Wer hat wie viel beigetragen
 - [ ] Saldo-Berechnung (wer schuldet wem)
 
@@ -283,7 +283,7 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 
 ### KI-Ausgaben-Insights (R-200)
 - [ ] Google ML Kit / TFLite On-Device-Modell
-- [ ] Muster-Erkennung: "Restaurantausgaben 30% hoeher als letzten Monat"
+- [ ] Muster-Erkennung: "Restaurantausgaben 30% höher als letzten Monat"
 - [ ] Insight-Karten auf Dashboard
 - [ ] Keine Finanzdaten an externe Server
 
@@ -312,7 +312,7 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 
 ---
 
-## Laufend: Qualitaet & Operations
+## Laufend: Qualität & Operations
 
 ### Testing
 - [ ] Unit-Tests fuer DB-Operationen und Business-Logik
@@ -326,7 +326,7 @@ Umfassender Implementierungsplan fuer Schlicht basierend auf PRD v2.0. Greenfiel
 - [ ] Retention-Metriken tracken (Day-7, Day-30, Day-90)
 
 ### Rechtliches
-- [ ] DSGVO-konforme Datenschutzerklaerung
+- [ ] DSGVO-konforme Datenschutzerklärung
 - [ ] AGB / Nutzungsbedingungen
 - [ ] Impressum (Pflicht in DE)
 - [ ] Cookie-/Tracking-Consent (falls Analytics)

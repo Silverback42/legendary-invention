@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Quick-Entry screen – Phase 1a.
 class AddTransactionScreen extends StatelessWidget {
@@ -6,9 +7,10 @@ class AddTransactionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Ausgabe erfassen')),
-      body: const Center(child: Text('Quick-Entry – Phase 1a')),
+      appBar: AppBar(title: Text(l10n.transactionAddTitle)),
+      body: Center(child: Text(l10n.quickEntryPlaceholderTitle)),
     );
   }
 }

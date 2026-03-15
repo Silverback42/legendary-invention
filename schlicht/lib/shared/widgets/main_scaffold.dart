@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/routing/app_router.dart';
@@ -10,6 +11,7 @@ class MainScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final location = GoRouterState.of(context).matchedLocation;
     final currentIndex = _indexForLocation(location);
 
@@ -17,38 +19,33 @@ class MainScaffold extends StatelessWidget {
       body: child,
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(AppRoutes.addTransaction),
-        tooltip: 'Ausgabe erfassen',
+        tooltip: l10n.addTransaction,
         child: const Icon(Icons.add, size: 28),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentIndex,
         onDestinationSelected: (index) => _onNavTap(context, index),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.grid_view_outlined),
-            selectedIcon: Icon(Icons.grid_view),
-            label: 'Übersicht',
+            icon: const Icon(Icons.grid_view_outlined),
+            selectedIcon: const Icon(Icons.grid_view),
+            label: l10n.navDashboard,
           ),
           NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined),
-            selectedIcon: Icon(Icons.receipt_long),
-            label: 'Ausgaben',
-          ),
-          // Center gap for FAB
-          NavigationDestination(
-            icon: SizedBox(width: 48),
-            label: '',
+            icon: const Icon(Icons.receipt_long_outlined),
+            selectedIcon: const Icon(Icons.receipt_long),
+            label: l10n.navTransactions,
           ),
           NavigationDestination(
-            icon: Icon(Icons.donut_large_outlined),
-            selectedIcon: Icon(Icons.donut_large),
-            label: 'Budgets',
+            icon: const Icon(Icons.donut_large_outlined),
+            selectedIcon: const Icon(Icons.donut_large),
+            label: l10n.navBudgets,
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: 'Einstellungen',
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: l10n.navSettings,
           ),
         ],
       ),
@@ -57,8 +54,8 @@ class MainScaffold extends StatelessWidget {
 
   int _indexForLocation(String location) {
     if (location.startsWith(AppRoutes.transactions)) return 1;
-    if (location.startsWith(AppRoutes.budgets)) return 3;
-    if (location.startsWith(AppRoutes.settings)) return 4;
+    if (location.startsWith(AppRoutes.budgets)) return 2;
+    if (location.startsWith(AppRoutes.settings)) return 3;
     return 0; // dashboard
   }
 
@@ -66,12 +63,16 @@ class MainScaffold extends StatelessWidget {
     switch (index) {
       case 0:
         context.go(AppRoutes.dashboard);
+        return;
       case 1:
         context.go(AppRoutes.transactions);
-      case 3:
+        return;
+      case 2:
         context.go(AppRoutes.budgets);
-      case 4:
+        return;
+      case 3:
         context.go(AppRoutes.settings);
+        return;
     }
   }
 }

@@ -74,5 +74,17 @@
   "validationAmountPositive": "Der Betrag muss größer als 0 sein.",
   "validationCategoryRequired": "Bitte wähle eine Kategorie aus.",
 
-  "genericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+  "genericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+
+  "dashboardMonthTooltip": "Monat wählen",
+  "dashboardPlaceholderTitle": "Dashboard – Phase 1a",
+
+  "settingsTitle": "Einstellungen",
+  "settingsPlaceholderTitle": "Einstellungen – Phase 1a",
+
+  "transactionAddTitle": "Ausgabe erfassen",
+  "quickEntryPlaceholderTitle": "Quick-Entry – Phase 1a",
+
+  "transactionsTitle": "Ausgaben",
+  "transactionsListPlaceholderTitle": "Transaktionsliste – Phase 1a"
 }

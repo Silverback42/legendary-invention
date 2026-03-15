@@ -31,8 +31,8 @@ class SchlichtApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Schlicht',
       theme: AppTheme.light,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizationsWrapper.localizationsDelegates,
+      supportedLocales: AppLocalizationsWrapper.supportedLocales,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

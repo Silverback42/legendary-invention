@@ -53,7 +53,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.editTransaction,
         builder: (context, state) {
-          final id = int.parse(state.pathParameters['id']!);
+          final id = int.tryParse(state.pathParameters['id'] ?? '');
+          if (id == null) {
+            return const TransactionsScreen();
+          }
           return EditTransactionScreen(transactionId: id);
         },
       ),

@@ -74,5 +74,17 @@
   "validationAmountPositive": "Amount must be greater than 0.",
   "validationCategoryRequired": "Please select a category.",
 
-  "genericError": "Something went wrong. Please try again."
+  "genericError": "Something went wrong. Please try again.",
+
+  "dashboardMonthTooltip": "Select month",
+  "dashboardPlaceholderTitle": "Dashboard – Phase 1a",
+
+  "settingsTitle": "Settings",
+  "settingsPlaceholderTitle": "Settings – Phase 1a",
+
+  "transactionAddTitle": "Add expense",
+  "quickEntryPlaceholderTitle": "Quick-Entry – Phase 1a",
+
+  "transactionsTitle": "Transactions",
+  "transactionsListPlaceholderTitle": "Transactions list – Phase 1a"
 }

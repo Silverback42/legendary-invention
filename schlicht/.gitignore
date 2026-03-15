@@ -18,9 +18,6 @@ lib/l10n/app_localizations_*.dart
 android/local.properties
 android/.gradle
 android/captures/
-android/gradlew
-android/gradlew.bat
-android/gradle/
 android/key.properties
 android/app/*.jks
 android/app/google-services.json
