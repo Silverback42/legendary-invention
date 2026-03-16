@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 /// Maps stored icon names (Material Symbol names) to [IconData].
+///
+/// Seed-data icons use snake_case names such as 'shopping_cart',
+/// matching the Material Icons constant naming convention.
 IconData categoryIconData(String iconName) {
   return _iconMap[iconName] ?? Icons.circle_outlined;
 }
