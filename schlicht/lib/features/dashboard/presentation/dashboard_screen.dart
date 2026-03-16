@@ -33,8 +33,27 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _showBarChart = false;
 
+  // Cached stream to avoid resubscription on unrelated rebuilds (e.g. chart toggle)
+  Stream<_DashboardData>? _dashboardStream;
+  AppDatabase? _cachedDb;
+  int? _cachedYear;
+  int? _cachedMonth;
+
+  Stream<_DashboardData> _getStream(AppDatabase db, int year, int month) {
+    if (_dashboardStream == null ||
+        _cachedDb != db ||
+        _cachedYear != year ||
+        _cachedMonth != month) {
+      _cachedDb = db;
+      _cachedYear = year;
+      _cachedMonth = month;
+      _dashboardStream = _watchDashboardData(db, year, month);
+    }
+    return _dashboardStream!;
+  }
+
   @override
-  Widget build(BuildContext context, ) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final db = ref.watch(databaseProvider);
     final settings = ref.watch(appSettingsProvider);
@@ -58,7 +77,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ],
       ),
       body: StreamBuilder<_DashboardData>(
-        stream: _watchDashboardData(db, year, month),
+        stream: _getStream(db, year, month),
         builder: (context, snap) {
           final data = snap.data;
 
@@ -642,6 +661,7 @@ class _ComparisonCard extends StatefulWidget {
 
 class _ComparisonCardState extends State<_ComparisonCard> {
   double? _prevTotal;
+  Object _loadToken = Object();
 
   @override
   void initState() {
@@ -661,6 +681,8 @@ class _ComparisonCardState extends State<_ComparisonCard> {
   }
 
   Future<void> _loadPrev() async {
+    final token = Object();
+    _loadToken = token;
     var pm = widget.month - 1;
     var py = widget.year;
     if (pm < 1) {
@@ -668,7 +690,7 @@ class _ComparisonCardState extends State<_ComparisonCard> {
       py--;
     }
     final total = await widget.db.getTotalSpendingForMonth(py, pm);
-    if (mounted) setState(() => _prevTotal = total);
+    if (mounted && _loadToken == token) setState(() => _prevTotal = total);
   }
 
   @override
