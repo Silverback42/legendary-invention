@@ -652,7 +652,12 @@ class _ComparisonCardState extends State<_ComparisonCard> {
   @override
   void didUpdateWidget(_ComparisonCard old) {
     super.didUpdateWidget(old);
-    if (old.currentTotal != widget.currentTotal) _loadPrev();
+    if (old.currentTotal != widget.currentTotal ||
+        old.year != widget.year ||
+        old.month != widget.month ||
+        old.db != widget.db) {
+      _loadPrev();
+    }
   }
 
   Future<void> _loadPrev() async {

@@ -26,6 +26,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   late int _year;
   late int _month;
   bool _showBarChart = false;
+  Future<_HistoryData>? _historyFuture;
 
   // Free tier: 3 months back
   static const int _freeMonthLimit = 3;
@@ -66,6 +67,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     setState(() {
       _month = m;
       _year = y;
+      _historyFuture = null; // force reload on next build
     });
   }
 
@@ -128,8 +130,33 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           // Content
           Expanded(
             child: FutureBuilder<_HistoryData>(
-              future: _loadData(db),
+              future: _historyFuture ??= _loadData(db),
               builder: (context, snap) {
+                if (snap.hasError) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 48,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .error,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(l10n.genericError),
+                        const SizedBox(height: 12),
+                        TextButton(
+                          onPressed: () => setState(() {
+                            _historyFuture = null;
+                          }),
+                          child: Text(l10n.done), // "retry" — reuses existing string
+                        ),
+                      ],
+                    ),
+                  );
+                }
                 if (!snap.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
