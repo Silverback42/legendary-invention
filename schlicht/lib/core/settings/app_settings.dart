@@ -11,11 +11,13 @@ class AppSettings {
   final String currency; // 'EUR' or 'CHF'
   final String locale; // 'de' or 'en'
   final String inputMode; // 'single' or 'monthly'
+  final bool hasCompletedOnboarding;
 
   const AppSettings({
     this.currency = 'EUR',
     this.locale = 'de',
     this.inputMode = 'single',
+    this.hasCompletedOnboarding = false,
   });
 
   String get currencySymbol => currency == 'CHF' ? 'CHF' : '€';
@@ -27,11 +29,14 @@ class AppSettings {
     String? currency,
     String? locale,
     String? inputMode,
+    bool? hasCompletedOnboarding,
   }) {
     return AppSettings(
       currency: currency ?? this.currency,
       locale: locale ?? this.locale,
       inputMode: inputMode ?? this.inputMode,
+      hasCompletedOnboarding:
+          hasCompletedOnboarding ?? this.hasCompletedOnboarding,
     );
   }
 
@@ -39,6 +44,7 @@ class AppSettings {
         'currency': currency,
         'locale': locale,
         'inputMode': inputMode,
+        'hasCompletedOnboarding': hasCompletedOnboarding,
       };
 
   factory AppSettings.fromJson(Map<String, dynamic> json) {
@@ -46,6 +52,8 @@ class AppSettings {
       currency: json['currency'] as String? ?? 'EUR',
       locale: json['locale'] as String? ?? 'de',
       inputMode: json['inputMode'] as String? ?? 'single',
+      hasCompletedOnboarding:
+          json['hasCompletedOnboarding'] as bool? ?? false,
     );
   }
 }
@@ -58,6 +66,9 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
 
   File? _file;
   late final Future<void> _init;
+
+  /// Await this to ensure settings are loaded before routing decisions.
+  Future<void> get initialized => _init;
 
   Future<void> load() async {
     final dir = await getApplicationDocumentsDirectory();
@@ -91,6 +102,11 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
 
   Future<void> setInputMode(String mode) async {
     state = state.copyWith(inputMode: mode);
+    await _persist();
+  }
+
+  Future<void> completeOnboarding() async {
+    state = state.copyWith(hasCompletedOnboarding: true);
     await _persist();
   }
 }

@@ -13,6 +13,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../shared/utils/category_icon.dart';
 import '../../../shared/widgets/category_donut_chart.dart';
 import '../../../shared/widgets/category_bar_chart.dart';
+import '../../../shared/widgets/skeleton_loader.dart';
 
 /// Dashboard – Phase 1b Bento-Grid version.
 ///
@@ -80,6 +81,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         stream: _getStream(db, year, month),
         builder: (context, snap) {
           final data = snap.data;
+
+          if (data == null && snap.connectionState == ConnectionState.waiting) {
+            return const DashboardSkeleton();
+          }
 
           return SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
