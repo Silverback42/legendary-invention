@@ -273,6 +273,24 @@ class _TotalCard extends StatelessWidget {
     final hasPrev = totalPrev > 0;
     final diff = hasPrev ? ((total - totalPrev) / totalPrev * 100) : 0.0;
     final isMore = diff > 0;
+    final isLess = diff < 0;
+
+    final IconData trendIcon;
+    final Color trendColor;
+    final String trendLabel;
+    if (isMore) {
+      trendIcon = Icons.trending_up;
+      trendColor = AppTheme.budgetOver;
+      trendLabel = l10n.moreSpending;
+    } else if (isLess) {
+      trendIcon = Icons.trending_down;
+      trendColor = AppTheme.budgetOk;
+      trendLabel = l10n.lessSpending;
+    } else {
+      trendIcon = Icons.trending_flat;
+      trendColor = AppTheme.budgetNeutral;
+      trendLabel = l10n.sameSpending;
+    }
 
     return Card(
       child: Padding(
@@ -296,19 +314,18 @@ class _TotalCard extends StatelessWidget {
               Row(
                 children: [
                   Icon(
-                    isMore ? Icons.trending_up : Icons.trending_down,
+                    trendIcon,
                     size: 18,
-                    color: isMore ? AppTheme.budgetOver : AppTheme.budgetOk,
+                    color: trendColor,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     l10n.comparedToLastMonth(
-                      isMore ? l10n.moreSpending : l10n.lessSpending,
+                      trendLabel,
                       diff.abs().toStringAsFixed(0),
                     ),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color:
-                              isMore ? AppTheme.budgetOver : AppTheme.budgetOk,
+                          color: trendColor,
                           fontWeight: FontWeight.w500,
                         ),
                   ),

@@ -91,6 +91,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       setState(() => _showBarChart = !_showBarChart),
                   fmt: fmt,
                   l10n: l10n,
+                  onCategoryTap: data != null
+                      ? (categoryId) => _showCategoryDrillDown(
+                            context,
+                            db,
+                            data,
+                            categoryId,
+                            year,
+                            month,
+                            fmt,
+                            l10n,
+                          )
+                      : null,
                 ),
                 const SizedBox(height: 12),
 
@@ -142,6 +154,112 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  /// Shows a bottom sheet with all transactions for a tapped category.
+  void _showCategoryDrillDown(
+    BuildContext context,
+    AppDatabase db,
+    _DashboardData data,
+    int categoryId,
+    int year,
+    int month,
+    NumberFormat fmt,
+    AppLocalizations l10n,
+  ) {
+    final category = data.categories
+        .where((c) => c.id == categoryId)
+        .firstOrNull;
+    if (category == null) return;
+
+    final categoryTxs = data.transactions
+        .where((t) => t.categoryId == categoryId)
+        .toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        minChildSize: 0.3,
+        maxChildSize: 0.85,
+        expand: false,
+        builder: (ctx, scrollController) => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundColor:
+                        Color(category.colorValue).withValues(alpha: 0.15),
+                    child: Icon(
+                      categoryIconData(category.icon),
+                      color: Color(category.colorValue),
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      category.name,
+                      style: Theme.of(ctx).textTheme.titleMedium,
+                    ),
+                  ),
+                  Text(
+                    fmt.format(data.spending[categoryId] ?? 0),
+                    style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+            Expanded(
+              child: categoryTxs.isEmpty
+                  ? Center(child: Text(l10n.noTransactionsYet))
+                  : ListView.separated(
+                      controller: scrollController,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: categoryTxs.length,
+                      separatorBuilder: (_, __) =>
+                          const Divider(height: 1),
+                      itemBuilder: (ctx, i) {
+                        final tx = categoryTxs[i];
+                        return ListTile(
+                          dense: true,
+                          title: Text(
+                            tx.note?.isNotEmpty == true
+                                ? tx.note!
+                                : category.name,
+                          ),
+                          subtitle: Text(
+                            DateFormat.yMMMd(
+                              Localizations.localeOf(ctx).toString(),
+                            ).format(tx.date),
+                            style: Theme.of(ctx).textTheme.bodySmall,
+                          ),
+                          trailing: Text(
+                            fmt.format(tx.amount),
+                            style: Theme.of(ctx)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -216,7 +334,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
-  /// Merges multiple broadcast-capable streams into a single stream.
+  /// Merges multiple streams into one. Cleans up subscriptions on cancellation.
   Stream<T> _mergeStreams<T>(List<Stream<T>> streams) async* {
     final controller = StreamController<T>();
     final subs = <StreamSubscription<T>>[];
@@ -226,8 +344,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         onError: controller.addError,
       ));
     }
-    yield* controller.stream;
-    // cleanup handled by StreamBuilder cancellation
+    try {
+      yield* controller.stream;
+    } finally {
+      for (final sub in subs) {
+        await sub.cancel();
+      }
+      await controller.close();
+    }
   }
 }
 
@@ -347,6 +471,7 @@ class _ChartCard extends StatelessWidget {
   final VoidCallback onToggle;
   final NumberFormat fmt;
   final AppLocalizations l10n;
+  final ValueChanged<int>? onCategoryTap;
 
   const _ChartCard({
     required this.chartData,
@@ -354,6 +479,7 @@ class _ChartCard extends StatelessWidget {
     required this.onToggle,
     required this.fmt,
     required this.l10n,
+    this.onCategoryTap,
   });
 
   @override
@@ -396,11 +522,13 @@ class _ChartCard extends StatelessWidget {
               CategoryBarChart(
                 data: chartData,
                 formatAmount: (a) => fmt.format(a),
+                onBarTap: onCategoryTap,
               )
             else
               CategoryDonutChart(
                 data: chartData,
                 formatAmount: (a) => fmt.format(a),
+                onSegmentTap: onCategoryTap,
               ),
           ],
         ),
