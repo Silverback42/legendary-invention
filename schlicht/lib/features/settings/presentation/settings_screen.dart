@@ -119,7 +119,7 @@ class SettingsScreen extends ConsumerWidget {
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(
               l10n.delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+              style: TextStyle(color: Theme.of(ctx).colorScheme.error),
             ),
           ),
         ],
@@ -131,7 +131,7 @@ class SettingsScreen extends ConsumerWidget {
       await db.clearAllData();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Daten gelöscht')),
+          SnackBar(content: Text(l10n.dataCleared)),
         );
       }
     }

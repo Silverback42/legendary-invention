@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/db/database.dart';
+import '../../../core/settings/app_settings.dart';
 import '../../../shared/utils/category_icon.dart';
 
 /// Edit transaction screen – Phase 1a.
@@ -35,10 +36,10 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
     super.dispose();
   }
 
-  void _loadTransaction(Transaction t) {
+  void _loadTransaction(Transaction t, AppSettings settings) {
     if (_loaded) return;
     _loaded = true;
-    _amountController.text = NumberFormat('#0.00', 'de_DE').format(t.amount);
+    _amountController.text = NumberFormat('#0.00', settings.fullLocale).format(t.amount);
     _noteController.text = t.note ?? '';
     _selectedCategoryId = t.categoryId;
     _selectedDate = t.date;
@@ -102,121 +103,116 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final db = ref.watch(databaseProvider);
+    final settings = ref.watch(appSettingsProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.editTransaction)),
-      body: FutureBuilder<List<Transaction>>(
-        future: db.getTransactionsForMonth(
-          DateTime.now().year,
-          DateTime.now().month,
-        ),
-        builder: (context, snapshot) {
-          // Find the transaction by id across all months
-          return StreamBuilder<List<Transaction>>(
-            stream: _findTransaction(db),
-            builder: (context, txSnap) {
-              if (!txSnap.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              final txList = txSnap.data!;
-              if (txList.isEmpty) {
-                return Center(child: Text(l10n.genericError));
-              }
-              final transaction = txList.first;
-              _loadTransaction(transaction);
+      body: StreamBuilder<List<Transaction>>(
+        stream: _findTransaction(db),
+        builder: (context, txSnap) {
+          if (txSnap.hasError) {
+            return Center(child: Text(l10n.genericError));
+          }
+          if (!txSnap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final txList = txSnap.data!;
+          if (txList.isEmpty) {
+            return Center(child: Text(l10n.genericError));
+          }
+          final transaction = txList.first;
+          _loadTransaction(transaction, settings);
 
-              return StreamBuilder<List<Category>>(
-                stream: db.watchAllCategories(),
-                builder: (context, catSnap) {
-                  final categories = catSnap.data ?? [];
+          return StreamBuilder<List<Category>>(
+            stream: db.watchAllCategories(),
+            builder: (context, catSnap) {
+              final categories = catSnap.data ?? [];
 
-                  return Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Amount
-                        TextField(
-                          controller: _amountController,
-                          decoration: InputDecoration(
-                            labelText: l10n.amount,
-                            suffixText: '€',
-                          ),
-                          keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Category selection
-                        Text(l10n.category,
-                            style: Theme.of(context).textTheme.bodySmall),
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: categories.map((cat) {
-                            final selected = cat.id == _selectedCategoryId;
-                            final color = Color(cat.colorValue);
-                            return ChoiceChip(
-                              label: Text(cat.name),
-                              avatar: Icon(
-                                categoryIconData(cat.icon),
-                                color: color,
-                                size: 18,
-                              ),
-                              selected: selected,
-                              selectedColor: color.withOpacity(0.15),
-                              onSelected: (_) =>
-                                  setState(() => _selectedCategoryId = cat.id),
-                            );
-                          }).toList(),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Note
-                        TextField(
-                          controller: _noteController,
-                          decoration: InputDecoration(
-                            labelText: l10n.note,
-                          ),
-                          maxLength: 100,
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Date
-                        InkWell(
-                          onTap: _selectDate,
-                          borderRadius: BorderRadius.circular(12),
-                          child: InputDecorator(
-                            decoration: InputDecoration(
-                              labelText: l10n.date,
-                            ),
-                            child: Text(
-                              DateFormat.yMMMd('de_DE').format(_selectedDate),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Save
-                        ElevatedButton(
-                          onPressed: _saving ? null : () => _save(transaction),
-                          child: _saving
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : Text(l10n.save),
-                        ),
-                      ],
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Amount
+                    TextField(
+                      controller: _amountController,
+                      decoration: InputDecoration(
+                        labelText: l10n.amount,
+                        suffixText: settings.currencySymbol,
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
-                  );
-                },
+                    const SizedBox(height: 16),
+
+                    // Category selection
+                    Text(l10n.category,
+                        style: Theme.of(context).textTheme.bodySmall),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: categories.map((cat) {
+                        final selected = cat.id == _selectedCategoryId;
+                        final color = Color(cat.colorValue);
+                        return ChoiceChip(
+                          label: Text(cat.name),
+                          avatar: Icon(
+                            categoryIconData(cat.icon),
+                            color: color,
+                            size: 18,
+                          ),
+                          selected: selected,
+                          selectedColor: color.withOpacity(0.15),
+                          onSelected: (_) =>
+                              setState(() => _selectedCategoryId = cat.id),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Note
+                    TextField(
+                      controller: _noteController,
+                      decoration: InputDecoration(
+                        labelText: l10n.note,
+                      ),
+                      maxLength: 100,
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Date
+                    InkWell(
+                      onTap: _selectDate,
+                      borderRadius: BorderRadius.circular(12),
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: l10n.date,
+                        ),
+                        child: Text(
+                          DateFormat.yMMMd(settings.fullLocale).format(_selectedDate),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Save
+                    ElevatedButton(
+                      onPressed: _saving ? null : () => _save(transaction),
+                      child: _saving
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(l10n.save),
+                    ),
+                  ],
+                ),
               );
             },
           );

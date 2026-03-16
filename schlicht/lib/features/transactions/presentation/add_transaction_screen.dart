@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/db/database.dart';
+import '../../../core/settings/app_settings.dart';
 import '../../../shared/utils/category_icon.dart';
 
 /// Quick-Entry screen – Phase 1a.
@@ -35,9 +36,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     return int.parse(_amountCents) / 100;
   }
 
-  String get _displayAmount {
-    final formatted = NumberFormat('#,##0.00', 'de_DE').format(_amount);
-    return '$formatted €';
+  String _displayAmount(AppSettings settings) {
+    final formatted = NumberFormat('#,##0.00', settings.fullLocale).format(_amount);
+    return '$formatted ${settings.currencySymbol}';
   }
 
   @override
@@ -126,13 +127,15 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     if (picked == today.subtract(const Duration(days: 1))) {
       return l10n.yesterday;
     }
-    return DateFormat.yMMMd('de_DE').format(date);
+    final settings = ref.read(appSettingsProvider);
+    return DateFormat.yMMMd(settings.fullLocale).format(date);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final db = ref.watch(databaseProvider);
+    final settings = ref.watch(appSettingsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -152,7 +155,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: Text(
-              _displayAmount,
+              _displayAmount(settings),
               style: Theme.of(context).textTheme.displayLarge?.copyWith(
                     fontSize: 40,
                     fontWeight: FontWeight.w700,
@@ -323,7 +326,7 @@ class _CategoryGrid extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 11,
                         color: isSelected
-                            ? Theme.of(context).colorScheme.onBackground
+                            ? Theme.of(context).colorScheme.onSurface
                             : null,
                       ),
                   maxLines: 1,

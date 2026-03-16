@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/db/database.dart';
 import '../../../core/routing/app_router.dart';
+import '../../../core/settings/app_settings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/utils/category_icon.dart';
 
@@ -22,6 +23,7 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final db = ref.watch(databaseProvider);
+    final settings = ref.watch(appSettingsProvider);
     final now = DateTime.now();
     final year = now.year;
     final month = now.month;
@@ -37,17 +39,31 @@ class DashboardScreen extends ConsumerWidget {
           children: [
             // Month label
             Text(
-              DateFormat.yMMMM('de_DE').format(now),
+              DateFormat.yMMMM(settings.fullLocale).format(now),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
 
             // Spending + Budget card
-            _SpendingCard(db: db, year: year, month: month, l10n: l10n),
+            _SpendingCard(
+              db: db,
+              year: year,
+              month: month,
+              l10n: l10n,
+              locale: settings.fullLocale,
+              currencySymbol: settings.currencySymbol,
+            ),
             const SizedBox(height: 24),
 
             // Recent transactions
-            _RecentTransactions(db: db, year: year, month: month, l10n: l10n),
+            _RecentTransactions(
+              db: db,
+              year: year,
+              month: month,
+              l10n: l10n,
+              locale: settings.fullLocale,
+              currencySymbol: settings.currencySymbol,
+            ),
           ],
         ),
       ),
@@ -64,12 +80,16 @@ class _SpendingCard extends StatelessWidget {
   final int year;
   final int month;
   final AppLocalizations l10n;
+  final String locale;
+  final String currencySymbol;
 
   const _SpendingCard({
     required this.db,
     required this.year,
     required this.month,
     required this.l10n,
+    required this.locale,
+    required this.currencySymbol,
   });
 
   @override
@@ -106,6 +126,11 @@ class _SpendingCard extends StatelessWidget {
               statusColor = AppTheme.budgetOk;
             }
 
+            final currencyFormat = NumberFormat.currency(
+              locale: locale,
+              symbol: currencySymbol,
+            );
+
             return Card(
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -119,8 +144,7 @@ class _SpendingCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      NumberFormat.currency(locale: 'de_DE', symbol: '€')
-                          .format(totalSpending),
+                      currencyFormat.format(totalSpending),
                       style:
                           Theme.of(context).textTheme.displayMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
@@ -143,8 +167,8 @@ class _SpendingCard extends StatelessWidget {
                       // Remaining
                       Text(
                         remaining >= 0
-                            ? '${l10n.budgetRemaining}: ${NumberFormat.currency(locale: 'de_DE', symbol: '€').format(remaining)}'
-                            : '${l10n.budgetOver}: ${NumberFormat.currency(locale: 'de_DE', symbol: '€').format(remaining.abs())}',
+                            ? '${l10n.budgetRemaining}: ${currencyFormat.format(remaining)}'
+                            : '${l10n.budgetOver}: ${currencyFormat.format(remaining.abs())}',
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
@@ -171,12 +195,16 @@ class _RecentTransactions extends StatelessWidget {
   final int year;
   final int month;
   final AppLocalizations l10n;
+  final String locale;
+  final String currencySymbol;
 
   const _RecentTransactions({
     required this.db,
     required this.year,
     required this.month,
     required this.l10n,
+    required this.locale,
+    required this.currencySymbol,
   });
 
   @override
@@ -234,11 +262,13 @@ class _RecentTransactions extends StatelessWidget {
               );
             }
 
-            // Show last 5 transactions
-            final recent = transactions.take(5).toList();
+            // Sort by date descending and show last 5
+            final sorted = List<Transaction>.from(transactions)
+              ..sort((a, b) => b.date.compareTo(a.date));
+            final recent = sorted.take(5).toList();
 
-            return FutureBuilder<List<Category>>(
-              future: db.getAllCategories(),
+            return StreamBuilder<List<Category>>(
+              stream: db.watchAllCategories(),
               builder: (context, catSnap) {
                 final categories = catSnap.data ?? [];
 
@@ -250,6 +280,8 @@ class _RecentTransactions extends StatelessWidget {
                         _RecentTile(
                           transaction: recent[i],
                           categories: categories,
+                          locale: locale,
+                          currencySymbol: currencySymbol,
                         ),
                       ],
                     ],
@@ -267,10 +299,14 @@ class _RecentTransactions extends StatelessWidget {
 class _RecentTile extends StatelessWidget {
   final Transaction transaction;
   final List<Category> categories;
+  final String locale;
+  final String currencySymbol;
 
   const _RecentTile({
     required this.transaction,
     required this.categories,
+    required this.locale,
+    required this.currencySymbol,
   });
 
   @override
@@ -306,7 +342,7 @@ class _RecentTile extends StatelessWidget {
             )
           : null,
       trailing: Text(
-        NumberFormat.currency(locale: 'de_DE', symbol: '€')
+        NumberFormat.currency(locale: locale, symbol: currencySymbol)
             .format(transaction.amount),
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,

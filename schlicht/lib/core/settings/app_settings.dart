@@ -20,6 +20,9 @@ class AppSettings {
 
   String get currencySymbol => currency == 'CHF' ? 'CHF' : '€';
 
+  /// Full locale string for NumberFormat / DateFormat (e.g. 'de_DE', 'en_US').
+  String get fullLocale => locale == 'en' ? 'en_US' : 'de_DE';
+
   AppSettings copyWith({
     String? currency,
     String? locale,
@@ -49,9 +52,12 @@ class AppSettings {
 
 /// Notifier that manages [AppSettings] with JSON file persistence.
 class AppSettingsNotifier extends StateNotifier<AppSettings> {
-  AppSettingsNotifier() : super(const AppSettings());
+  AppSettingsNotifier() : super(const AppSettings()) {
+    _init = load();
+  }
 
   File? _file;
+  late final Future<void> _init;
 
   Future<void> load() async {
     final dir = await getApplicationDocumentsDirectory();
@@ -60,16 +66,17 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
       try {
         final json = jsonDecode(await _file!.readAsString());
         state = AppSettings.fromJson(json as Map<String, dynamic>);
-      } catch (_) {
-        // Corrupted file – keep defaults
+      } on FormatException catch (e) {
+        debugPrint('Failed to parse settings: $e');
+      } catch (e) {
+        debugPrint('Unexpected error loading settings: $e');
       }
     }
   }
 
   Future<void> _persist() async {
-    if (_file != null) {
-      await _file!.writeAsString(jsonEncode(state.toJson()));
-    }
+    await _init;
+    await _file!.writeAsString(jsonEncode(state.toJson()));
   }
 
   Future<void> setCurrency(String currency) async {

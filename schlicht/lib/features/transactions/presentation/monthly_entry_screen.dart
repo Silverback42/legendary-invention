@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/db/database.dart';
+import '../../../core/settings/app_settings.dart';
 import '../../../shared/utils/category_icon.dart';
 
 /// Monthly totals entry screen – Phase 1a.
@@ -62,11 +63,13 @@ class _MonthlyEntryScreenState extends ConsumerState<MonthlyEntryScreen> {
 
   Future<void> _save(List<Category> categories) async {
     final l10n = AppLocalizations.of(context)!;
+    final settings = ref.read(appSettingsProvider);
     setState(() => _saving = true);
 
     try {
       final db = ref.read(databaseProvider);
       final date = DateTime(_selectedMonth.year, _selectedMonth.month, 1);
+      final monthLabel = DateFormat.yMMMM(settings.fullLocale).format(date);
 
       for (final cat in categories) {
         final text = _controllerFor(cat.id).text.trim().replaceAll(',', '.');
@@ -75,7 +78,7 @@ class _MonthlyEntryScreenState extends ConsumerState<MonthlyEntryScreen> {
           await db.insertTransaction(TransactionsCompanion(
             amount: Value(amount),
             categoryId: Value(cat.id),
-            note: Value('Monatssumme ${DateFormat.yMMMM('de_DE').format(date)}'),
+            note: Value(l10n.monthlySum(monthLabel)),
             date: Value(date),
           ));
         }
@@ -98,6 +101,7 @@ class _MonthlyEntryScreenState extends ConsumerState<MonthlyEntryScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final db = ref.watch(databaseProvider);
+    final settings = ref.watch(appSettingsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -116,7 +120,7 @@ class _MonthlyEntryScreenState extends ConsumerState<MonthlyEntryScreen> {
                   onPressed: _previousMonth,
                 ),
                 Text(
-                  DateFormat.yMMMM('de_DE').format(_selectedMonth),
+                  DateFormat.yMMMM(settings.fullLocale).format(_selectedMonth),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 IconButton(
@@ -128,54 +132,63 @@ class _MonthlyEntryScreenState extends ConsumerState<MonthlyEntryScreen> {
           ),
           const Divider(),
 
-          // Category list with amount fields
+          // Category list with amount fields + save button (single StreamBuilder)
           Expanded(
             child: StreamBuilder<List<Category>>(
               stream: db.watchAllCategories(),
               builder: (context, snapshot) {
-                final categories = snapshot.data ?? [];
-                if (categories.isEmpty) {
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    !snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
-
-                return ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
-                  itemCount: categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final cat = categories[index];
-                    final color = Color(cat.colorValue);
-                    return _CategoryAmountRow(
-                      category: cat,
-                      color: color,
-                      controller: _controllerFor(cat.id),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-
-          // Save button
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-            child: StreamBuilder<List<Category>>(
-              stream: db.watchAllCategories(),
-              builder: (context, snapshot) {
                 final categories = snapshot.data ?? [];
-                return ElevatedButton(
-                  onPressed:
-                      _saving ? null : () => _save(categories),
-                  child: _saving
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(l10n.save),
+                if (categories.isEmpty) {
+                  return Center(
+                    child: Text(
+                      l10n.noTransactionsYet,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  );
+                }
+
+                return Column(
+                  children: [
+                    Expanded(
+                      child: ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+                        itemCount: categories.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final cat = categories[index];
+                          final color = Color(cat.colorValue);
+                          return _CategoryAmountRow(
+                            category: cat,
+                            color: color,
+                            controller: _controllerFor(cat.id),
+                            currencySymbol: settings.currencySymbol,
+                          );
+                        },
+                      ),
+                    ),
+                    // Save button
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                      child: ElevatedButton(
+                        onPressed:
+                            _saving ? null : () => _save(categories),
+                        child: _saving
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text(l10n.save),
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
@@ -190,11 +203,13 @@ class _CategoryAmountRow extends StatelessWidget {
   final Category category;
   final Color color;
   final TextEditingController controller;
+  final String currencySymbol;
 
   const _CategoryAmountRow({
     required this.category,
     required this.color,
     required this.controller,
+    required this.currencySymbol,
   });
 
   @override
@@ -223,9 +238,9 @@ class _CategoryAmountRow extends StatelessWidget {
           flex: 2,
           child: TextField(
             controller: controller,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: '0,00',
-              suffixText: '€',
+              suffixText: currencySymbol,
               isDense: true,
             ),
             keyboardType:
