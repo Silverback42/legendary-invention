@@ -30,8 +30,10 @@ class _CustomizeTemplateScreenState
   @override
   void initState() {
     super.initState();
-    final situation = LifeSituation.values[widget.situationIndex];
-    final template = budgetTemplates[situation]!;
+    final index = widget.situationIndex.clamp(0, LifeSituation.values.length - 1);
+    final situation = LifeSituation.values[index];
+    final template = budgetTemplates[situation] ??
+        budgetTemplates[LifeSituation.individual]!;
     _categories = template.categories
         .map((c) => _EditableCategory.fromTemplate(c))
         .toList();
@@ -39,8 +41,24 @@ class _CustomizeTemplateScreenState
 
   Future<void> _confirm() async {
     if (_categories.isEmpty || _saving) return;
+
+    // Trim names and validate before starting the save
+    for (final c in _categories) {
+      c.name = c.name.trim();
+    }
+    if (_categories.any((c) => c.name.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.categoryNameRequired),
+        ),
+      );
+      return;
+    }
+
     setState(() => _saving = true);
 
+    // Snapshot the list so async mutations can't affect the transaction
+    final snapshot = List<_EditableCategory>.unmodifiable(_categories);
     final db = ref.read(databaseProvider);
     final settingsNotifier = ref.read(appSettingsProvider.notifier);
     final now = DateTime.now();
@@ -54,8 +72,8 @@ class _CustomizeTemplateScreenState
         }
 
         // Insert template categories and budgets
-        for (var i = 0; i < _categories.length; i++) {
-          final c = _categories[i];
+        for (var i = 0; i < snapshot.length; i++) {
+          final c = snapshot[i];
           final catId = await db.insertCategory(CategoriesCompanion(
             name: Value(c.name),
             code: Value(c.code),
@@ -134,7 +152,9 @@ class _CustomizeTemplateScreenState
                   final cat = _categories[index];
                   return Dismissible(
                     key: ValueKey(cat.code + index.toString()),
-                    direction: DismissDirection.endToStart,
+                    direction: _saving
+                        ? DismissDirection.none
+                        : DismissDirection.endToStart,
                     confirmDismiss: (_) async {
                       if (_categories.length <= 1) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -159,71 +179,74 @@ class _CustomizeTemplateScreenState
                       child: Icon(Icons.delete_outline,
                           color: theme.colorScheme.error),
                     ),
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(
-                          children: [
-                            // Category icon
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Color(cat.colorValue)
-                                    .withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(10),
+                    child: IgnorePointer(
+                      ignoring: _saving,
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              // Category icon
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: Color(cat.colorValue)
+                                      .withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(
+                                  categoryIconData(cat.icon),
+                                  color: Color(cat.colorValue),
+                                  size: 20,
+                                ),
                               ),
-                              child: Icon(
-                                categoryIconData(cat.icon),
-                                color: Color(cat.colorValue),
-                                size: 20,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
+                              const SizedBox(width: 12),
 
-                            // Name (editable)
-                            Expanded(
-                              child: TextFormField(
-                                initialValue: cat.name,
-                                style: theme.textTheme.bodyLarge,
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.zero,
+                              // Name (editable)
+                              Expanded(
+                                child: TextFormField(
+                                  initialValue: cat.name,
+                                  style: theme.textTheme.bodyLarge,
+                                  decoration: const InputDecoration(
+                                    isDense: true,
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                  onChanged: (v) => cat.name = v,
                                 ),
-                                onChanged: (v) => cat.name = v,
                               ),
-                            ),
 
-                            // Budget amount (editable)
-                            SizedBox(
-                              width: 80,
-                              child: TextFormField(
-                                initialValue: cat.budget > 0
-                                    ? cat.budget.toStringAsFixed(0)
-                                    : '',
-                                textAlign: TextAlign.right,
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.w600,
+                              // Budget amount (editable)
+                              SizedBox(
+                                width: 80,
+                                child: TextFormField(
+                                  initialValue: cat.budget > 0
+                                      ? cat.budget.toStringAsFixed(0)
+                                      : '',
+                                  textAlign: TextAlign.right,
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.zero,
+                                    hintText: '0',
+                                    suffixText: settings.currencySymbol,
+                                    suffixStyle: theme.textTheme.bodySmall,
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  onChanged: (v) =>
+                                      cat.budget = double.tryParse(v) ?? 0,
                                 ),
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.zero,
-                                  hintText: '0',
-                                  suffixText: settings.currencySymbol,
-                                  suffixStyle: theme.textTheme.bodySmall,
-                                ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                onChanged: (v) =>
-                                    cat.budget = double.tryParse(v) ?? 0,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

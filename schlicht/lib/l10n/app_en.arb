@@ -169,6 +169,7 @@
   "removeCategoryHint": "Swipe left to remove",
   "categoryLimitReached": "Maximum 8 categories in free tier.",
   "minOneCategoryRequired": "At least one category is required.",
+  "categoryNameRequired": "All categories need a name.",
 
   "noCategoriesYet": "No categories yet.",
   "categoriesTitle": "Categories",

@@ -45,6 +45,22 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
       body: StreamBuilder<List<Category>>(
         stream: db.watchAllCategories(),
         builder: (context, snap) {
+          if (snap.hasError) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(l10n.genericError),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () => setState(() {}),
+                    child: Text(l10n.retry),
+                  ),
+                ],
+              ),
+            );
+          }
+
           final categories = snap.data;
           if (categories == null) {
             return const Center(child: CircularProgressIndicator());

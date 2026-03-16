@@ -169,6 +169,7 @@
   "removeCategoryHint": "Nach links wischen zum Entfernen",
   "categoryLimitReached": "Maximal 8 Kategorien im Free-Tier.",
   "minOneCategoryRequired": "Mindestens eine Kategorie benötigt.",
+  "categoryNameRequired": "Alle Kategorien brauchen einen Namen.",
 
   "noCategoriesYet": "Noch keine Kategorien vorhanden.",
   "categoriesTitle": "Kategorien",
