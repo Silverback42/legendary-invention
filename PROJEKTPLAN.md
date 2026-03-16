@@ -102,27 +102,27 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 > **Ziel: Der Nutzer sieht, wohin sein Geld fliesst, und kann Limits setzen.**
 
 ### Kategorie-Visualisierung (R-002)
-- [ ] Donut-Chart auf dem Dashboard (fl_chart) -- Ausgaben nach Kategorie
-- [ ] Farbcodierung pro Kategorie
-- [ ] Tap auf Segment zeigt Kategorie-Detail (Drill-Down auf Einzelposten)
-- [ ] Balkendiagramm als Alternative (umschaltbar)
+- [x] Donut-Chart auf dem Dashboard (fl_chart) -- Ausgaben nach Kategorie
+- [x] Farbcodierung pro Kategorie
+- [x] Tap auf Segment zeigt Kategorie-Detail (Drill-Down auf Einzelposten)
+- [x] Balkendiagramm als Alternative (umschaltbar)
 
 ### Monats-Budget pro Kategorie (R-003)
-- [ ] Budget-Setup-Screen: Betrag pro Kategorie festlegen
-- [ ] Fortschrittsbalken pro Kategorie auf Dashboard
-- [ ] Farbwechsel bei 80 % (Orange) und 100 % (Rot, aber sanft)
-- [ ] Verbleibendes Gesamtbudget prominent auf Dashboard
-- [ ] Ermutigende Microcopy bei Budgetüberschreitung (R-014): "Fast geschafft!" statt "Budget überschritten!"
+- [x] Budget-Setup-Screen: Betrag pro Kategorie festlegen
+- [x] Fortschrittsbalken pro Kategorie auf Dashboard
+- [x] Farbwechsel bei 80 % (Orange) und 100 % (Rot, aber sanft)
+- [x] Verbleibendes Gesamtbudget prominent auf Dashboard
+- [x] Ermutigende Microcopy bei Budgetüberschreitung (R-014): "Fast geschafft!" statt "Budget überschritten!"
 
 ### Historien-Ansicht (R-009)
-- [ ] Monatsweise Navigation (3 Monate zurueck fuer Free-Tier)
-- [ ] Monat-zu-Monat-Vergleich: Balkendiagramm oder Zahl mit Trend-Pfeil
-- [ ] Leerer Zustand huebsch gestalten ("Noch keine Daten fuer diesen Monat")
+- [x] Monatsweise Navigation (3 Monate zurueck fuer Free-Tier)
+- [x] Monat-zu-Monat-Vergleich: Balkendiagramm oder Zahl mit Trend-Pfeil
+- [x] Leerer Zustand huebsch gestalten ("Noch keine Daten fuer diesen Monat")
 
 ### Dashboard aufwerten
-- [ ] Bento-Grid-Layout (R-007): Karten fuer Budget, Top-Kategorie, Monatsvergleich
-- [ ] Clean-Modern-Design umsetzen: Whitespace, 2 Akzentfarben, klare Typografie
-- [ ] WCAG 2.1 AA prüfen (4,5:1 Kontrast, 44x44px Touch-Targets)
+- [x] Bento-Grid-Layout (R-007): Karten fuer Budget, Top-Kategorie, Monatsvergleich
+- [x] Clean-Modern-Design umsetzen: Whitespace, 2 Akzentfarben, klare Typografie
+- [x] WCAG 2.1 AA prüfen (4,5:1 Kontrast, 44x44px Touch-Targets)
 
 ---
 
@@ -338,8 +338,8 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 | Phase | Status | Zeitrahmen |
 |-------|--------|------------|
 | Phase 0: Setup & Architektur | **Abgeschlossen** | Woche 1 |
-| Phase 1a: Manuelle Eingabe (Kern-MVP) | **In Review (PRs erstellt)** | Woche 2-3 |
-| Phase 1b: Visualisierung & Budgets | Offen | Woche 4-5 |
+| Phase 1a: Manuelle Eingabe (Kern-MVP) | **Abgeschlossen** | Woche 2-3 |
+| Phase 1b: Visualisierung & Budgets | **Abgeschlossen** | Woche 4-5 |
 | Phase 1c: Onboarding & Polish | Offen | Woche 6-7 |
 | Phase 1d: Launch-Features | Offen | Woche 8-10 |
 | Phase 1.5: Post-Launch Quick Wins | Offen | Woche 11-14 |

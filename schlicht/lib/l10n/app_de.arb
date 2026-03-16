@@ -93,5 +93,54 @@
   "@monthlySum": {
     "placeholders": { "month": { "type": "String" } }
   },
-  "deleteError": "Konnte nicht gelöscht werden. Bitte erneut versuchen."
+  "deleteError": "Konnte nicht gelöscht werden. Bitte erneut versuchen.",
+
+  "chartDonut": "Kreisdiagramm",
+  "chartBar": "Balkendiagramm",
+  "chartToggleTooltip": "Diagrammtyp wechseln",
+  "spendingByCategory": "Ausgaben nach Kategorie",
+  "noDataForChart": "Noch keine Daten für ein Diagramm.",
+  "percentOfTotal": "{percent} % der Ausgaben",
+  "@percentOfTotal": {
+    "placeholders": { "percent": { "type": "String" } }
+  },
+
+  "budgetSetupTitle": "Budgets festlegen",
+  "budgetAmount": "Betrag",
+  "budgetSaved": "Budget gespeichert",
+  "budgetDeleted": "Budget gelöscht",
+  "budgetProgress": "{spent} von {total}",
+  "@budgetProgress": {
+    "placeholders": {
+      "spent": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "budgetAlmostReachedHint": "Fast geschafft – du bist auf einem guten Weg!",
+  "budgetOverHint": "Kein Stress – nächsten Monat wird's besser!",
+  "budgetOnTrack": "Im grünen Bereich",
+  "noBudgetSet": "Kein Budget gesetzt",
+  "budgetRemoved": "Budget entfernt",
+
+  "history": "Verlauf",
+  "historyTitle": "Monatsverlauf",
+  "noDataForMonth": "Noch keine Daten für diesen Monat",
+  "comparedToLastMonth": "{direction} {percent} % zum Vormonat",
+  "@comparedToLastMonth": {
+    "placeholders": {
+      "direction": { "type": "String" },
+      "percent": { "type": "String" }
+    }
+  },
+  "moreSpending": "mehr",
+  "lessSpending": "weniger",
+
+  "dashboardBudgetCard": "Budget",
+  "dashboardTopCategory": "Top-Kategorie",
+  "dashboardComparison": "Vergleich",
+  "dashboardNoComparison": "Noch kein Vergleichsmonat vorhanden.",
+
+  "monthPrevious": "Vorheriger Monat",
+  "monthNext": "Nächster Monat",
+  "freeMonthsLimit": "Kostenlos: letzte 3 Monate"
 }
