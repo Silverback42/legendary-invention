@@ -24,6 +24,7 @@ class AppTheme {
   static const Color budgetOk = Color(0xFF4CAF82);
   static const Color budgetWarning = Color(0xFFFF9800);   // 80%+ used
   static const Color budgetOver = Color(0xFFE57373);      // 100%+ used (soft, not aggressive)
+  static const Color budgetNeutral = Color(0xFF8A8AA8);   // no change / neutral
 
   // --- Typography ---
   static const TextTheme _textTheme = TextTheme(

@@ -8,6 +8,7 @@ import '../../features/transactions/presentation/add_transaction_screen.dart';
 import '../../features/transactions/presentation/edit_transaction_screen.dart';
 import '../../features/transactions/presentation/monthly_entry_screen.dart';
 import '../../features/budgets/presentation/budgets_screen.dart';
+import '../../features/history/presentation/history_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../shared/widgets/main_scaffold.dart';
 
@@ -19,6 +20,7 @@ abstract class AppRoutes {
   static const monthlyEntry = '/transactions/monthly';
   static const editTransaction = '/transactions/:id/edit';
   static const budgets = '/budgets';
+  static const history = '/history';
   static const settings = '/settings';
 }
 
@@ -41,6 +43,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: AppRoutes.budgets,
             builder: (context, state) => const BudgetsScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.history,
+            builder: (context, state) => const HistoryScreen(),
           ),
           GoRoute(
             path: AppRoutes.settings,

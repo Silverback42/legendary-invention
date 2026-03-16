@@ -110,6 +110,23 @@ class AppDatabase extends _$AppDatabase {
     };
   }
 
+  /// Returns total spending for a given month (sum of all transactions).
+  Future<double> getTotalSpendingForMonth(int year, int month) async {
+    final startDate = DateTime(year, month, 1);
+    final endDate = DateTime(year, month + 1, 1);
+
+    final total = transactions.amount.sum();
+    final query = selectOnly(transactions)
+      ..addColumns([total])
+      ..where(
+        transactions.date.isBiggerOrEqualValue(startDate) &
+        transactions.date.isSmallerThanValue(endDate),
+      );
+
+    final row = await query.getSingle();
+    return row.read(total) ?? 0.0;
+  }
+
   // ---------------------------------------------------------------------------
   // Budgets
   // ---------------------------------------------------------------------------
