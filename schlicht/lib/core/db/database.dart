@@ -52,6 +52,16 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteCategory(int id) =>
       (delete(categories)..where((c) => c.id.equals(id))).go();
 
+  /// Batch-updates [sortOrder] for all categories in the given ID order.
+  Future<void> reorderCategories(List<int> orderedIds) {
+    return transaction(() async {
+      for (var i = 0; i < orderedIds.length; i++) {
+        await (update(categories)..where((c) => c.id.equals(orderedIds[i])))
+            .write(CategoriesCompanion(sortOrder: Value(i)));
+      }
+    });
+  }
+
   // ---------------------------------------------------------------------------
   // Transactions
   // ---------------------------------------------------------------------------

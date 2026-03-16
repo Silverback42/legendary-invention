@@ -130,29 +130,29 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 > **Ziel: Erstnutzer-Erlebnis perfektionieren. App fuehlt sich "fertig" an.**
 
 ### Budget-Vorlagen-Onboarding (R-010)
-- [ ] Welcome-Screen mit App-Intro (max. 3 Screens, R-015)
-- [ ] Lebenssituation waehlen: Student / Berufseinsteiger / Familie / Paar / Individuell
-- [ ] Template laedt vorkonfigurierte Kategorien + Budget-Richtwerte
-- [ ] Nutzer kann anpassen vor Bestaetigung
-- [ ] Kein leerer Startbildschirm nach Onboarding
+- [x] Welcome-Screen mit App-Intro (max. 3 Screens, R-015)
+- [x] Lebenssituation waehlen: Student / Berufseinsteiger / Familie / Paar / Individuell
+- [x] Template laedt vorkonfigurierte Kategorien + Budget-Richtwerte
+- [x] Nutzer kann anpassen vor Bestaetigung
+- [x] Kein leerer Startbildschirm nach Onboarding
 
 ### Kategorien verwalten
-- [ ] Kategorien umbenennen
-- [ ] Kategorien-Reihenfolge ändern (Drag & Drop)
-- [ ] Eigene Kategorien hinzufügen (Premium, max. 8 im Free-Tier)
-- [ ] Kategorie-Icons aus vordefinierter Auswahl
+- [x] Kategorien umbenennen
+- [x] Kategorien-Reihenfolge ändern (Drag & Drop)
+- [x] Eigene Kategorien hinzufügen (Premium, max. 8 im Free-Tier)
+- [x] Kategorie-Icons aus vordefinierter Auswahl
 
 ### Design-Polish
-- [ ] Übergangs-Animationen zwischen Screens
-- [ ] Skeleton-Screens statt Ladekreisel
-- [ ] Leere Zustände hübsch gestalten (Illustrationen oder motivierende Texte)
-- [ ] Splash-Screen mit Logo
-- [ ] App-Icon designen und einbinden
+- [x] Übergangs-Animationen zwischen Screens
+- [x] Skeleton-Screens statt Ladekreisel
+- [x] Leere Zustände hübsch gestalten (Illustrationen oder motivierende Texte)
+- [x] Splash-Screen mit Logo
+- [x] App-Icon designen und einbinden
 
 ### Offline-First verifizieren (R-005)
-- [ ] Alle Features ohne Internet testen
-- [ ] Keine Netzwerk-Abhängigkeiten in Phase 1
-- [ ] Drift-DB als alleinige Source of Truth bestätigen
+- [x] Alle Features ohne Internet testen
+- [x] Keine Netzwerk-Abhängigkeiten in Phase 1
+- [x] Drift-DB als alleinige Source of Truth bestätigen
 
 ---
 
@@ -340,7 +340,7 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 | Phase 0: Setup & Architektur | **Abgeschlossen** | Woche 1 |
 | Phase 1a: Manuelle Eingabe (Kern-MVP) | **Abgeschlossen** | Woche 2-3 |
 | Phase 1b: Visualisierung & Budgets | **Abgeschlossen** | Woche 4-5 |
-| Phase 1c: Onboarding & Polish | Offen | Woche 6-7 |
+| Phase 1c: Onboarding & Polish | **Abgeschlossen** | Woche 6-7 |
 | Phase 1d: Launch-Features | Offen | Woche 8-10 |
 | Phase 1.5: Post-Launch Quick Wins | Offen | Woche 11-14 |
 | Phase 2: Cloud & Shared Budgets | Offen | Monat 4-6 |

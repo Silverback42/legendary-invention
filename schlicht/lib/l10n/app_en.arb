@@ -143,5 +143,49 @@
   "monthPrevious": "Previous month",
   "monthNext": "Next month",
   "freeMonthsLimit": "Free tier: last 3 months",
-  "sameSpending": "Same as last month"
+  "sameSpending": "Same as last month",
+
+  "onboardingWelcomeTitle": "Welcome to Schlicht",
+  "onboardingWelcomeSubtitle": "Budgeting, plain and simple.",
+  "onboardingTrackTitle": "Track your spending",
+  "onboardingTrackSubtitle": "Log expenses in under 3 seconds. See instantly where your money goes.",
+  "onboardingPrivacyTitle": "Private & Offline",
+  "onboardingPrivacySubtitle": "Your data stays on your device. No account, no tracking, no cloud required.",
+  "onboardingNext": "Next",
+  "onboardingSkip": "Skip",
+  "onboardingGetStarted": "Get started",
+
+  "lifeSituationTitle": "What's your life like?",
+  "lifeSituationSubtitle": "We'll suggest categories and budgets that fit you.",
+  "lifeSituationStudent": "Student",
+  "lifeSituationCareerStarter": "Career starter",
+  "lifeSituationFamily": "Family",
+  "lifeSituationCouple": "Couple",
+  "lifeSituationIndividual": "Individual",
+
+  "customizeTitle": "Customize your budget",
+  "customizeSubtitle": "Adjust categories and amounts to your needs.",
+  "suggestedBudget": "Suggested budget",
+  "removeCategoryHint": "Swipe left to remove",
+  "categoryLimitReached": "Maximum 8 categories in free tier.",
+  "minOneCategoryRequired": "At least one category is required.",
+
+  "categoriesTitle": "Categories",
+  "addCategory": "Add category",
+  "editCategory": "Edit category",
+  "categoryName": "Name",
+  "chooseIcon": "Choose icon",
+  "chooseColor": "Choose color",
+  "deleteCategoryConfirm": "Really delete this category? Related expenses will be kept.",
+  "categoryDeleted": "Category deleted",
+  "categorySaved": "Category saved",
+  "manageCategories": "Manage categories",
+
+  "categoryEducation": "Education",
+  "categorySavings": "Savings",
+  "categoryChildren": "Children",
+  "categoryInsurance": "Insurance",
+  "categoryVacation": "Vacation",
+
+  "retry": "Retry"
 }

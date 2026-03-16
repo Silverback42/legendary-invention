@@ -10,6 +10,7 @@ import '../../../shared/utils/category_icon.dart';
 import '../../../shared/widgets/category_donut_chart.dart';
 import '../../../shared/widgets/category_bar_chart.dart';
 import '../../../shared/widgets/month_selector.dart';
+import '../../../shared/widgets/skeleton_loader.dart';
 
 /// History screen – Phase 1b.
 ///
@@ -158,7 +159,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   );
                 }
                 if (!snap.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const HistorySkeleton();
                 }
 
                 final data = snap.data!;

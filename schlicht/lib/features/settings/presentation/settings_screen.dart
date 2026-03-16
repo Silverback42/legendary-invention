@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/db/database.dart';
+import '../../../core/routing/app_router.dart';
 import '../../../core/settings/app_settings.dart';
 
 /// Settings screen – Phase 1a.
@@ -72,6 +74,15 @@ class SettingsScreen extends ConsumerWidget {
             value: 'monthly',
             groupValue: settings.inputMode,
             onChanged: (v) => notifier.setInputMode(v!),
+          ),
+          const Divider(),
+
+          // --- Categories ---
+          ListTile(
+            leading: const Icon(Icons.category_outlined),
+            title: Text(l10n.manageCategories),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.categories),
           ),
           const Divider(),
 

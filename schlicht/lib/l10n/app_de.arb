@@ -143,5 +143,49 @@
   "monthPrevious": "Vorheriger Monat",
   "monthNext": "Nächster Monat",
   "freeMonthsLimit": "Kostenlos: letzte 3 Monate",
-  "sameSpending": "Gleich wie Vormonat"
+  "sameSpending": "Gleich wie Vormonat",
+
+  "onboardingWelcomeTitle": "Willkommen bei Schlicht",
+  "onboardingWelcomeSubtitle": "Budgeting, schlicht und einfach.",
+  "onboardingTrackTitle": "Deine Ausgaben im Blick",
+  "onboardingTrackSubtitle": "Erfasse Ausgaben in unter 3 Sekunden. Sieh sofort, wohin dein Geld fließt.",
+  "onboardingPrivacyTitle": "Privat & Offline",
+  "onboardingPrivacySubtitle": "Deine Daten bleiben auf deinem Gerät. Kein Konto, kein Tracking, kein Cloud-Zwang.",
+  "onboardingNext": "Weiter",
+  "onboardingSkip": "Überspringen",
+  "onboardingGetStarted": "Los geht's",
+
+  "lifeSituationTitle": "Wie sieht dein Alltag aus?",
+  "lifeSituationSubtitle": "Wir schlagen dir passende Kategorien und Budgets vor.",
+  "lifeSituationStudent": "Student",
+  "lifeSituationCareerStarter": "Berufseinsteiger",
+  "lifeSituationFamily": "Familie",
+  "lifeSituationCouple": "Paar",
+  "lifeSituationIndividual": "Individuell",
+
+  "customizeTitle": "Dein Budget anpassen",
+  "customizeSubtitle": "Passe Kategorien und Beträge an deine Situation an.",
+  "suggestedBudget": "Vorgeschlagenes Budget",
+  "removeCategoryHint": "Nach links wischen zum Entfernen",
+  "categoryLimitReached": "Maximal 8 Kategorien im Free-Tier.",
+  "minOneCategoryRequired": "Mindestens eine Kategorie benötigt.",
+
+  "categoriesTitle": "Kategorien",
+  "addCategory": "Kategorie hinzufügen",
+  "editCategory": "Kategorie bearbeiten",
+  "categoryName": "Name",
+  "chooseIcon": "Icon wählen",
+  "chooseColor": "Farbe wählen",
+  "deleteCategoryConfirm": "Kategorie wirklich löschen? Zugehörige Ausgaben bleiben erhalten.",
+  "categoryDeleted": "Kategorie gelöscht",
+  "categorySaved": "Kategorie gespeichert",
+  "manageCategories": "Kategorien verwalten",
+
+  "categoryEducation": "Uni / Bildung",
+  "categorySavings": "Sparen",
+  "categoryChildren": "Kinder",
+  "categoryInsurance": "Versicherungen",
+  "categoryVacation": "Urlaub",
+
+  "retry": "Erneut versuchen"
 }
