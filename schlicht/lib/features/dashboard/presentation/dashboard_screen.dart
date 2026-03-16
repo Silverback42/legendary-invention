@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -81,56 +83,51 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Row 2: Chart card
-                if (data != null && data.chartData.isNotEmpty) ...[
-                  _ChartCard(
-                    chartData: data.chartData,
-                    showBar: _showBarChart,
-                    onToggle: () =>
-                        setState(() => _showBarChart = !_showBarChart),
-                    fmt: fmt,
-                    l10n: l10n,
-                  ),
-                  const SizedBox(height: 12),
-                ],
-
-                // Row 3: Two small cards side by side
-                if (data != null)
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Top category
-                      Expanded(
-                        child: _TopCategoryCard(
-                          chartData: data.chartData,
-                          l10n: l10n,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Comparison
-                      Expanded(
-                        child: _ComparisonCard(
-                          db: db,
-                          currentTotal: data.totalSpending,
-                          year: year,
-                          month: month,
-                          fmt: fmt,
-                          l10n: l10n,
-                        ),
-                      ),
-                    ],
-                  ),
+                // Row 2: Chart card (shows empty-state internally)
+                _ChartCard(
+                  chartData: data?.chartData ?? [],
+                  showBar: _showBarChart,
+                  onToggle: () =>
+                      setState(() => _showBarChart = !_showBarChart),
+                  fmt: fmt,
+                  l10n: l10n,
+                ),
                 const SizedBox(height: 12),
 
-                // Row 4: Per-category budget progress
-                if (data != null && data.budgets.isNotEmpty)
-                  _BudgetProgressCard(
-                    data: data,
-                    fmt: fmt,
-                    l10n: l10n,
-                  ),
-                if (data != null && data.budgets.isNotEmpty)
-                  const SizedBox(height: 12),
+                // Row 3: Two small cards side by side
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Top category
+                    Expanded(
+                      child: _TopCategoryCard(
+                        chartData: data?.chartData ?? [],
+                        l10n: l10n,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Comparison
+                    Expanded(
+                      child: _ComparisonCard(
+                        db: db,
+                        currentTotal: data?.totalSpending ?? 0,
+                        year: year,
+                        month: month,
+                        fmt: fmt,
+                        l10n: l10n,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // Row 4: Per-category budget progress (shows empty-state internally)
+                _BudgetProgressCard(
+                  data: data,
+                  fmt: fmt,
+                  l10n: l10n,
+                ),
+                const SizedBox(height: 12),
 
                 // Row 5: Recent transactions
                 _RecentTransactionsCard(
@@ -149,24 +146,46 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  /// Combines multiple DB streams into a single dashboard data stream.
+  /// Combines transactions, budgets and categories into a single reactive stream.
+  /// Any change to any of the three sources triggers a rebuild.
   Stream<_DashboardData> _watchDashboardData(
     AppDatabase db,
     int year,
     int month,
-  ) {
-    // We combine the 3 streams manually via nested StreamBuilders below,
-    // but for cleaner architecture, use a FutureBuilder wrapper.
-    // For now, return a stream from transactions that triggers rebuilds.
-    return db.watchTransactionsForMonth(year, month).asyncMap((txs) async {
-      final categories = await db.getAllCategories();
+  ) async* {
+    // Latest values from each stream
+    List<Transaction>? latestTxs;
+    List<Budget>? latestBudgets;
+    List<Category>? latestCategories;
+
+    // Merge all 3 streams into one trigger stream
+    final txStream = db.watchTransactionsForMonth(year, month).map((v) {
+      latestTxs = v;
+      return true;
+    });
+    final budgetStream = db.watchBudgetsForMonth(year, month).map((v) {
+      latestBudgets = v;
+      return true;
+    });
+    final catStream = db.watchAllCategories().map((v) {
+      latestCategories = v;
+      return true;
+    });
+
+    // StreamGroup merges multiple streams into one
+    await for (final _ in _mergeStreams([txStream, budgetStream, catStream])) {
+      // Wait until we have at least one value from each stream
+      if (latestTxs == null || latestBudgets == null || latestCategories == null) {
+        continue;
+      }
+
+      final txs = latestTxs!;
+      final budgets = latestBudgets!;
+      final categories = latestCategories!;
       final spending = await db.getSpendingByCategory(year, month);
-      final budgets = await db.watchBudgetsForMonth(year, month).first;
 
       final totalSpending = txs.fold<double>(0, (s, t) => s + t.amount);
       final totalBudget = budgets.fold<double>(0, (s, b) => s + b.amount);
-      final totalAll =
-          spending.values.fold<double>(0, (s, v) => s + v);
 
       final chartData = <CategoryChartData>[];
       for (final cat in categories) {
@@ -177,14 +196,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           name: cat.name,
           color: Color(cat.colorValue),
           amount: amount,
-          percentage: totalAll > 0 ? (amount / totalAll) * 100 : 0,
+          percentage: totalSpending > 0 ? (amount / totalSpending) * 100 : 0,
         ));
       }
       chartData.sort((a, b) => b.amount.compareTo(a.amount));
 
       final budgetMap = {for (final b in budgets) b.categoryId: b};
 
-      return _DashboardData(
+      yield _DashboardData(
         transactions: txs,
         categories: categories,
         spending: spending,
@@ -194,7 +213,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         totalSpending: totalSpending,
         totalBudget: totalBudget,
       );
-    });
+    }
+  }
+
+  /// Merges multiple broadcast-capable streams into a single stream.
+  Stream<T> _mergeStreams<T>(List<Stream<T>> streams) async* {
+    final controller = StreamController<T>();
+    final subs = <StreamSubscription<T>>[];
+    for (final s in streams) {
+      subs.add(s.listen(
+        controller.add,
+        onError: controller.addError,
+      ));
+    }
+    yield* controller.stream;
+    // cleanup handled by StreamBuilder cancellation
   }
 }
 
@@ -349,7 +382,17 @@ class _ChartCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            if (showBar)
+            if (chartData.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: Center(
+                  child: Text(
+                    l10n.noDataForChart,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+              )
+            else if (showBar)
               CategoryBarChart(
                 data: chartData,
                 formatAmount: (a) => fmt.format(a),
@@ -522,6 +565,25 @@ class _ComparisonCardState extends State<_ComparisonCard> {
     final diff =
         ((widget.currentTotal - _prevTotal!) / _prevTotal! * 100);
     final isMore = diff > 0;
+    final isLess = diff < 0;
+    // isEqual when diff == 0
+
+    final IconData icon;
+    final Color color;
+    final String label;
+    if (isMore) {
+      icon = Icons.trending_up;
+      color = AppTheme.budgetOver;
+      label = l10n.moreSpending;
+    } else if (isLess) {
+      icon = Icons.trending_down;
+      color = AppTheme.budgetOk;
+      label = l10n.lessSpending;
+    } else {
+      icon = Icons.trending_flat;
+      color = AppTheme.budgetNeutral;
+      label = l10n.sameSpending;
+    }
 
     return Card(
       child: Padding(
@@ -534,11 +596,7 @@ class _ComparisonCardState extends State<_ComparisonCard> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(
-                  isMore ? Icons.trending_up : Icons.trending_down,
-                  color: isMore ? AppTheme.budgetOver : AppTheme.budgetOk,
-                  size: 20,
-                ),
+                Icon(icon, color: color, size: 20),
                 const SizedBox(width: 4),
                 Flexible(
                   child: Text(
@@ -546,9 +604,7 @@ class _ComparisonCardState extends State<_ComparisonCard> {
                     style:
                         Theme.of(context).textTheme.displayMedium?.copyWith(
                               fontWeight: FontWeight.w700,
-                              color: isMore
-                                  ? AppTheme.budgetOver
-                                  : AppTheme.budgetOk,
+                              color: color,
                             ),
                   ),
                 ),
@@ -556,7 +612,7 @@ class _ComparisonCardState extends State<_ComparisonCard> {
             ),
             const SizedBox(height: 4),
             Text(
-              isMore ? l10n.moreSpending : l10n.lessSpending,
+              label,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -571,7 +627,7 @@ class _ComparisonCardState extends State<_ComparisonCard> {
 // ---------------------------------------------------------------------------
 
 class _BudgetProgressCard extends StatelessWidget {
-  final _DashboardData data;
+  final _DashboardData? data;
   final NumberFormat fmt;
   final AppLocalizations l10n;
 
@@ -583,14 +639,48 @@ class _BudgetProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (data == null) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.dashboardBudgetCard,
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              Text(l10n.noBudgetsSubtitle,
+                  style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+        ),
+      );
+    }
+
     // Only categories that have a budget set
-    final categoriesWithBudget = data.categories
+    final categoriesWithBudget = data!.categories
         .where((c) =>
-            data.budgetMap.containsKey(c.id) &&
-            data.budgetMap[c.id]!.amount > 0)
+            data!.budgetMap.containsKey(c.id) &&
+            data!.budgetMap[c.id]!.amount > 0)
         .toList();
 
-    if (categoriesWithBudget.isEmpty) return const SizedBox.shrink();
+    if (categoriesWithBudget.isEmpty) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.dashboardBudgetCard,
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              Text(l10n.noBudgetsSubtitle,
+                  style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Card(
       child: Padding(
@@ -604,8 +694,8 @@ class _BudgetProgressCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             ...categoriesWithBudget.map((cat) {
-              final budget = data.budgetMap[cat.id]!;
-              final spent = data.spending[cat.id] ?? 0.0;
+              final budget = data!.budgetMap[cat.id]!;
+              final spent = data!.spending[cat.id] ?? 0.0;
               final ratio = spent / budget.amount;
 
               Color statusColor;
@@ -738,7 +828,7 @@ class _RecentTransactionsCard extends StatelessWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -814,7 +904,7 @@ class _RecentTile extends StatelessWidget {
       dense: true,
       leading: CircleAvatar(
         radius: 18,
-        backgroundColor: color.withOpacity(0.15),
+        backgroundColor: color.withValues(alpha: 0.15),
         child: Icon(
           category != null
               ? categoryIconData(category.icon)

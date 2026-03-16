@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'category_donut_chart.dart'; // reuse CategoryChartData
 
-/// Horizontal bar chart showing spending per category.
+/// Vertical bar chart showing spending per category.
 class CategoryBarChart extends StatelessWidget {
   final List<CategoryChartData> data;
   final ValueChanged<int>? onBarTap;
@@ -24,13 +24,14 @@ class CategoryBarChart extends StatelessWidget {
 
     final maxAmount =
         data.fold<double>(0, (m, d) => d.amount > m ? d.amount : m);
+    final safeMaxY = maxAmount > 0 ? maxAmount * 1.15 : 1.0;
 
     return SizedBox(
       height: data.length * 44.0 + 16,
       child: BarChart(
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
-          maxY: maxAmount * 1.15,
+          maxY: safeMaxY,
           barTouchData: BarTouchData(
             touchTooltipData: BarTouchTooltipData(
               getTooltipItem: (group, groupIndex, rod, rodIndex) {

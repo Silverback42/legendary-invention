@@ -91,44 +91,47 @@ class _CategoryDonutChartState extends State<CategoryDonutChart> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: widget.data.map((d) {
-                final isTouched =
-                    widget.data.indexOf(d) == _touchedIndex;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: d.color,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          d.name,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontWeight:
-                                    isTouched ? FontWeight.w600 : FontWeight.w400,
-                              ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Text(
-                        '${d.percentage.toStringAsFixed(0)}%',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontWeight:
-                                  isTouched ? FontWeight.w600 : FontWeight.w400,
+              children: [
+                for (var i = 0; i < widget.data.length; i++)
+                  Builder(builder: (context) {
+                    final d = widget.data[i];
+                    final isTouched = i == _touchedIndex;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: d.color,
+                              shape: BoxShape.circle,
                             ),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              d.name,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontWeight:
+                                        isTouched ? FontWeight.w600 : FontWeight.w400,
+                                  ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text(
+                            '${d.percentage.toStringAsFixed(0)}%',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  fontWeight:
+                                      isTouched ? FontWeight.w600 : FontWeight.w400,
+                                ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              }).toList(),
+                    );
+                  }),
+              ],
             ),
           ),
         ],

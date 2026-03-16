@@ -142,5 +142,6 @@
 
   "monthPrevious": "Vorheriger Monat",
   "monthNext": "Nächster Monat",
-  "freeMonthsLimit": "Kostenlos: letzte 3 Monate"
+  "freeMonthsLimit": "Kostenlos: letzte 3 Monate",
+  "sameSpending": "Gleich wie Vormonat"
 }

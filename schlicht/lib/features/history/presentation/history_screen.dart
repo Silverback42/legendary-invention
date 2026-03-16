@@ -9,6 +9,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../shared/utils/category_icon.dart';
 import '../../../shared/widgets/category_donut_chart.dart';
 import '../../../shared/widgets/category_bar_chart.dart';
+import '../../../shared/widgets/month_selector.dart';
 
 /// History screen – Phase 1b.
 ///
@@ -103,15 +104,15 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       body: Column(
         children: [
           // Month selector
-          _MonthSelector(
+          MonthSelector(
             year: _year,
             month: _month,
             locale: settings.fullLocale,
+            l10n: l10n,
             onPrevious: () => _changeMonth(-1),
             onNext: () => _changeMonth(1),
             canGoBack: _monthsBack < _freeMonthLimit,
             canGoForward: _monthsBack > 0,
-            l10n: l10n,
           ),
 
           // Limit hint
@@ -145,7 +146,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                         ),
                         const SizedBox(height: 12),
                         Text(l10n.noDataForMonth),
@@ -212,8 +213,6 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     final (py, pm) = _prevMonth;
     final totalPrev = await db.getTotalSpendingForMonth(py, pm);
 
-    final totalAll = spending.values.fold<double>(0, (s, v) => s + v);
-
     final chartData = <CategoryChartData>[];
     for (final cat in categories) {
       final amount = spending[cat.id] ?? 0.0;
@@ -223,7 +222,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         name: cat.name,
         color: Color(cat.colorValue),
         amount: amount,
-        percentage: totalAll > 0 ? (amount / totalAll) * 100 : 0,
+        percentage: totalCurrent > 0 ? (amount / totalCurrent) * 100 : 0,
       ));
     }
     // Sort by amount descending
@@ -250,61 +249,6 @@ class _HistoryData {
     required this.totalCurrent,
     required this.totalPrev,
   });
-}
-
-// ---------------------------------------------------------------------------
-// Month selector
-// ---------------------------------------------------------------------------
-
-class _MonthSelector extends StatelessWidget {
-  final int year;
-  final int month;
-  final String locale;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
-  final bool canGoBack;
-  final bool canGoForward;
-  final AppLocalizations l10n;
-
-  const _MonthSelector({
-    required this.year,
-    required this.month,
-    required this.locale,
-    required this.onPrevious,
-    required this.onNext,
-    required this.canGoBack,
-    required this.canGoForward,
-    required this.l10n,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final label =
-        DateFormat.yMMMM(locale).format(DateTime(year, month));
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.chevron_left),
-            tooltip: l10n.monthPrevious,
-            onPressed: canGoBack ? onPrevious : null,
-          ),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          IconButton(
-            icon: const Icon(Icons.chevron_right),
-            tooltip: l10n.monthNext,
-            onPressed: canGoForward ? onNext : null,
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 // ---------------------------------------------------------------------------

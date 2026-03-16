@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../../../core/db/database.dart';
 import '../../../core/settings/app_settings.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/month_selector.dart';
 import '../../../shared/utils/category_icon.dart';
 
 /// Budget setup screen – Phase 1b.
@@ -24,6 +25,7 @@ class BudgetsScreen extends ConsumerStatefulWidget {
 class _BudgetsScreenState extends ConsumerState<BudgetsScreen> {
   late int _year;
   late int _month;
+  Map<int, double> _spending = {};
 
   @override
   void initState() {
@@ -31,6 +33,13 @@ class _BudgetsScreenState extends ConsumerState<BudgetsScreen> {
     final now = DateTime.now();
     _year = now.year;
     _month = now.month;
+    _loadSpending();
+  }
+
+  Future<void> _loadSpending() async {
+    final db = ref.read(databaseProvider);
+    final spending = await db.getSpendingByCategory(_year, _month);
+    if (mounted) setState(() => _spending = spending);
   }
 
   void _changeMonth(int delta) {
@@ -47,6 +56,7 @@ class _BudgetsScreenState extends ConsumerState<BudgetsScreen> {
       _month = m;
       _year = y;
     });
+    _loadSpending();
   }
 
   @override
@@ -62,13 +72,13 @@ class _BudgetsScreenState extends ConsumerState<BudgetsScreen> {
       body: Column(
         children: [
           // Month selector
-          _MonthSelector(
+          MonthSelector(
             year: _year,
             month: _month,
             locale: settings.fullLocale,
+            l10n: l10n,
             onPrevious: () => _changeMonth(-1),
             onNext: () => _changeMonth(1),
-            l10n: l10n,
           ),
 
           // Category budget list
@@ -89,33 +99,27 @@ class _BudgetsScreenState extends ConsumerState<BudgetsScreen> {
                       for (final b in budgets) b.categoryId: b,
                     };
 
-                    return FutureBuilder<Map<int, double>>(
-                      future: db.getSpendingByCategory(_year, _month),
-                      builder: (context, spendingSnap) {
-                        final spending = spendingSnap.data ?? {};
+                    return ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+                      itemCount: categories.length,
+                      separatorBuilder: (_, __) =>
+                          const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final cat = categories[index];
+                        final budget = budgetMap[cat.id];
+                        final spent = _spending[cat.id] ?? 0.0;
 
-                        return ListView.separated(
-                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
-                          itemCount: categories.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 8),
-                          itemBuilder: (context, index) {
-                            final cat = categories[index];
-                            final budget = budgetMap[cat.id];
-                            final spent = spending[cat.id] ?? 0.0;
-
-                            return _BudgetCategoryTile(
-                              category: cat,
-                              budget: budget,
-                              spent: spent,
-                              year: _year,
-                              month: _month,
-                              locale: settings.fullLocale,
-                              currencySymbol: settings.currencySymbol,
-                              db: db,
-                              l10n: l10n,
-                            );
-                          },
+                        return _BudgetCategoryTile(
+                          category: cat,
+                          budget: budget,
+                          spent: spent,
+                          year: _year,
+                          month: _month,
+                          locale: settings.fullLocale,
+                          currencySymbol: settings.currencySymbol,
+                          db: db,
+                          l10n: l10n,
+                          onBudgetChanged: _loadSpending,
                         );
                       },
                     );
@@ -123,57 +127,6 @@ class _BudgetsScreenState extends ConsumerState<BudgetsScreen> {
                 );
               },
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Month selector
-// ---------------------------------------------------------------------------
-
-class _MonthSelector extends StatelessWidget {
-  final int year;
-  final int month;
-  final String locale;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
-  final AppLocalizations l10n;
-
-  const _MonthSelector({
-    required this.year,
-    required this.month,
-    required this.locale,
-    required this.onPrevious,
-    required this.onNext,
-    required this.l10n,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final label =
-        DateFormat.yMMMM(locale).format(DateTime(year, month));
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.chevron_left),
-            tooltip: l10n.monthPrevious,
-            onPressed: onPrevious,
-          ),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          IconButton(
-            icon: const Icon(Icons.chevron_right),
-            tooltip: l10n.monthNext,
-            onPressed: onNext,
           ),
         ],
       ),
@@ -195,6 +148,7 @@ class _BudgetCategoryTile extends StatelessWidget {
   final String currencySymbol;
   final AppDatabase db;
   final AppLocalizations l10n;
+  final VoidCallback? onBudgetChanged;
 
   const _BudgetCategoryTile({
     required this.category,
@@ -206,6 +160,7 @@ class _BudgetCategoryTile extends StatelessWidget {
     required this.currencySymbol,
     required this.db,
     required this.l10n,
+    this.onBudgetChanged,
   });
 
   @override
@@ -218,7 +173,7 @@ class _BudgetCategoryTile extends StatelessWidget {
     Color statusColor;
     String? hint;
     if (!hasBudget) {
-      statusColor = Theme.of(context).colorScheme.onSurface.withOpacity(0.4);
+      statusColor = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
     } else if (ratio >= 1.0) {
       statusColor = AppTheme.budgetOver;
       hint = l10n.budgetOverHint;
@@ -245,7 +200,7 @@ class _BudgetCategoryTile extends StatelessWidget {
                   CircleAvatar(
                     radius: 18,
                     backgroundColor:
-                        Color(category.colorValue).withOpacity(0.15),
+                        Color(category.colorValue).withValues(alpha: 0.15),
                     child: Icon(
                       categoryIconData(category.icon),
                       color: Color(category.colorValue),
@@ -356,6 +311,7 @@ class _BudgetCategoryTile extends StatelessWidget {
 
     if (result == -1.0 && budget != null) {
       await db.deleteBudget(budget!.id);
+      onBudgetChanged?.call();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.budgetRemoved)),
@@ -368,6 +324,7 @@ class _BudgetCategoryTile extends StatelessWidget {
         month: Value(month),
         year: Value(year),
       ));
+      onBudgetChanged?.call();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.budgetSaved)),
