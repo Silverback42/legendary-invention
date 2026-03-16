@@ -33,9 +33,7 @@ class _CustomizeTemplateScreenState
     final situation = LifeSituation.values[widget.situationIndex];
     final template = budgetTemplates[situation]!;
     _categories = template.categories
-        .asMap()
-        .entries
-        .map((e) => _EditableCategory.fromTemplate(e.value, e.key))
+        .map((c) => _EditableCategory.fromTemplate(c))
         .toList();
   }
 
@@ -47,49 +45,48 @@ class _CustomizeTemplateScreenState
     final settingsNotifier = ref.read(appSettingsProvider.notifier);
     final now = DateTime.now();
 
-    // Clear existing default categories (fresh install only — the seeded ones)
-    final existing = await db.getAllCategories();
-    for (final cat in existing) {
-      if (cat.isDefault) await db.deleteCategory(cat.id);
-    }
+    try {
+      await db.transaction(() async {
+        // Clear existing default categories (fresh install only — the seeded ones)
+        final existing = await db.getAllCategories();
+        for (final cat in existing) {
+          if (cat.isDefault) await db.deleteCategory(cat.id);
+        }
 
-    // Insert template categories and budgets
-    for (var i = 0; i < _categories.length; i++) {
-      final c = _categories[i];
-      final catId = await db.insertCategory(CategoriesCompanion(
-        name: Value(c.name),
-        code: Value(c.code),
-        icon: Value(c.icon),
-        colorValue: Value(c.colorValue),
-        sortOrder: Value(i),
-        isDefault: Value(true),
-      ));
+        // Insert template categories and budgets
+        for (var i = 0; i < _categories.length; i++) {
+          final c = _categories[i];
+          final catId = await db.insertCategory(CategoriesCompanion(
+            name: Value(c.name),
+            code: Value(c.code),
+            icon: Value(c.icon),
+            colorValue: Value(c.colorValue),
+            sortOrder: Value(i),
+            isDefault: const Value(true),
+          ));
 
-      if (c.budget > 0) {
-        await db.insertBudget(BudgetsCompanion(
-          categoryId: Value(catId),
-          amount: Value(c.budget),
-          month: Value(now.month),
-          year: Value(now.year),
-        ));
+          if (c.budget > 0) {
+            await db.insertBudget(BudgetsCompanion(
+              categoryId: Value(catId),
+              amount: Value(c.budget),
+              month: Value(now.month),
+              year: Value(now.year),
+            ));
+          }
+        }
+      });
+
+      await settingsNotifier.completeOnboarding();
+
+      if (mounted) context.go(AppRoutes.dashboard);
+    } catch (_) {
+      if (mounted) {
+        setState(() => _saving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Fehler beim Speichern. Bitte erneut versuchen.')),
+        );
       }
     }
-
-    await settingsNotifier.completeOnboarding();
-
-    if (mounted) context.go(AppRoutes.dashboard);
-  }
-
-  void _removeCategory(int index) {
-    if (_categories.length <= 1) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.minOneCategoryRequired),
-        ),
-      );
-      return;
-    }
-    setState(() => _categories.removeAt(index));
   }
 
   @override
@@ -138,7 +135,19 @@ class _CustomizeTemplateScreenState
                   return Dismissible(
                     key: ValueKey(cat.code + index.toString()),
                     direction: DismissDirection.endToStart,
-                    onDismissed: (_) => _removeCategory(index),
+                    confirmDismiss: (_) async {
+                      if (_categories.length <= 1) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(AppLocalizations.of(context)!
+                                .minOneCategoryRequired),
+                          ),
+                        );
+                        return false;
+                      }
+                      setState(() => _categories.removeAt(index));
+                      return false; // We already removed it from state
+                    },
                     background: Container(
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.only(right: 20),
@@ -263,7 +272,7 @@ class _EditableCategory {
     required this.budget,
   });
 
-  factory _EditableCategory.fromTemplate(TemplateCategory t, int index) {
+  factory _EditableCategory.fromTemplate(TemplateCategory t) {
     return _EditableCategory(
       name: t.name,
       code: t.code,

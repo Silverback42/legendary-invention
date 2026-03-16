@@ -70,7 +70,13 @@ class _ColorPickerSheet extends StatelessWidget {
                         : null,
                   ),
                   child: isSelected
-                      ? const Icon(Icons.check, color: Colors.white, size: 20)
+                      ? Icon(
+                          Icons.check,
+                          color: Color(colorValue).computeLuminance() > 0.5
+                              ? Colors.black
+                              : Colors.white,
+                          size: 20,
+                        )
                       : null,
                 ),
               );

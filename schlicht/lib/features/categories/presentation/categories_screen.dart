@@ -30,12 +30,13 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
           StreamBuilder<List<Category>>(
             stream: db.watchAllCategories(),
             builder: (context, snap) {
-              final count = snap.data?.length ?? 0;
+              final categories = snap.data;
+              final canAdd =
+                  categories != null && categories.length < _freeTierLimit;
               return IconButton(
                 icon: const Icon(Icons.add),
                 tooltip: l10n.addCategory,
-                onPressed:
-                    count >= _freeTierLimit ? null : () => _addCategory(db),
+                onPressed: canAdd ? () => _addCategory(db) : null,
               );
             },
           ),
@@ -50,7 +51,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
           }
 
           if (categories.isEmpty) {
-            return Center(child: Text(l10n.noBudgetsSubtitle));
+            return Center(child: Text(l10n.noCategoriesYet));
           }
 
           return ReorderableListView.builder(
@@ -62,6 +63,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
               final cat = categories[index];
               return _CategoryTile(
                 key: ValueKey(cat.id),
+                index: index,
                 category: cat,
                 onEdit: () => _editCategory(db, cat),
                 onDelete:
@@ -96,12 +98,15 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
     if (result == null) return;
 
     final categories = await db.getAllCategories();
+    final maxSort = categories.isEmpty
+        ? 0
+        : categories.map((c) => c.sortOrder).reduce((a, b) => a > b ? a : b) + 1;
     await db.insertCategory(CategoriesCompanion(
       name: Value(result.name),
       code: Value(result.name.toLowerCase().replaceAll(' ', '_')),
       icon: Value(result.icon),
       colorValue: Value(result.colorValue),
-      sortOrder: Value(categories.length),
+      sortOrder: Value(maxSort),
       isDefault: const Value(false),
     ));
     if (mounted) {
@@ -195,12 +200,14 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
 // ---------------------------------------------------------------------------
 
 class _CategoryTile extends StatelessWidget {
+  final int index;
   final Category category;
   final VoidCallback onEdit;
   final VoidCallback? onDelete;
 
   const _CategoryTile({
     super.key,
+    required this.index,
     required this.category,
     required this.onEdit,
     this.onDelete,
@@ -240,7 +247,7 @@ class _CategoryTile extends StatelessWidget {
             onPressed: onEdit,
           ),
           ReorderableDragStartListener(
-            index: 0, // handled by ReorderableListView
+            index: index,
             child: const Icon(Icons.drag_handle),
           ),
         ],

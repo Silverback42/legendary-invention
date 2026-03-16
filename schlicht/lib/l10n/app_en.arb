@@ -170,6 +170,7 @@
   "categoryLimitReached": "Maximum 8 categories in free tier.",
   "minOneCategoryRequired": "At least one category is required.",
 
+  "noCategoriesYet": "No categories yet.",
   "categoriesTitle": "Categories",
   "addCategory": "Add category",
   "editCategory": "Edit category",

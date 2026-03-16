@@ -47,9 +47,9 @@ class _SkeletonShimmerState extends State<SkeletonShimmer>
                 Color(0xFFE0E0E0),
               ],
               stops: [
-                _ctrl.value - 0.3,
+                (_ctrl.value - 0.3).clamp(0.0, 1.0),
                 _ctrl.value,
-                _ctrl.value + 0.3,
+                (_ctrl.value + 0.3).clamp(0.0, 1.0),
               ],
             ).createShader(bounds);
           },

@@ -170,6 +170,7 @@
   "categoryLimitReached": "Maximal 8 Kategorien im Free-Tier.",
   "minOneCategoryRequired": "Mindestens eine Kategorie benötigt.",
 
+  "noCategoriesYet": "Noch keine Kategorien vorhanden.",
   "categoriesTitle": "Kategorien",
   "addCategory": "Kategorie hinzufügen",
   "editCategory": "Kategorie bearbeiten",
