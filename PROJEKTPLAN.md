@@ -59,42 +59,42 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 > **Das ist die "erste Version" -- funktional, aber noch kein Design-Polishing.**
 
 ### Quick-Entry (R-001)
-- [ ] Quick-Entry-Screen: Betrag-Eingabe mit Nummernpad
-- [ ] Kategorie-Auswahl (max. 8 Icons als Grid)
-- [ ] Optionales Notiz-Feld
-- [ ] Datum-Auswahl (Standard: heute)
-- [ ] Speichern-Button -- Transaktion in Drift-DB schreiben
-- [ ] Eingabe in ≤ 3 Taps abschließbar
-- [ ] Validierung: Betrag > 0, Kategorie ausgewählt
+- [x] Quick-Entry-Screen: Betrag-Eingabe mit Nummernpad
+- [x] Kategorie-Auswahl (max. 8 Icons als Grid)
+- [x] Optionales Notiz-Feld
+- [x] Datum-Auswahl (Standard: heute)
+- [x] Speichern-Button -- Transaktion in Drift-DB schreiben
+- [x] Eingabe in ≤ 3 Taps abschließbar
+- [x] Validierung: Betrag > 0, Kategorie ausgewählt
 
 ### Monatssummen-Eingabe (User-Wunsch)
-- [ ] Alternativer Eingabe-Modus: Gesamtsumme pro Kategorie fuer einen Monat
-- [ ] Screen: Kategorie-Liste mit Eingabefeld pro Kategorie
-- [ ] Monat/Jahr-Auswahl
-- [ ] Speichern erstellt eine Sammel-Transaktion pro Kategorie
-- [ ] Umschaltbar zwischen Einzel- und Monatseingabe in Einstellungen
+- [x] Alternativer Eingabe-Modus: Gesamtsumme pro Kategorie fuer einen Monat
+- [x] Screen: Kategorie-Liste mit Eingabefeld pro Kategorie
+- [x] Monat/Jahr-Auswahl
+- [x] Speichern erstellt eine Sammel-Transaktion pro Kategorie
+- [x] Umschaltbar zwischen Einzel- und Monatseingabe in Einstellungen
 
 ### Transaktions-Liste
-- [ ] Listenansicht aller Transaktionen (gruppiert nach Tag)
-- [ ] Anzeige: Betrag, Kategorie-Icon + Name, Notiz, Datum
-- [ ] Swipe-to-Delete oder Long-Press-Menue
-- [ ] Transaktion bearbeiten (Tap oeffnet Edit-Screen)
-- [ ] Filtern nach Monat (Vor/Zurueck-Navigation)
+- [x] Listenansicht aller Transaktionen (gruppiert nach Tag)
+- [x] Anzeige: Betrag, Kategorie-Icon + Name, Notiz, Datum
+- [x] Swipe-to-Delete oder Long-Press-Menue
+- [x] Transaktion bearbeiten (Tap oeffnet Edit-Screen)
+- [x] Filtern nach Monat (Vor/Zurueck-Navigation)
 
 ### Einfaches Dashboard (Minimal-Version)
-- [ ] Hauptscreen mit:
+- [x] Hauptscreen mit:
   - Aktueller Monat + verbleibendes Budget (wenn gesetzt)
   - Gesamtausgaben des Monats
   - Liste der letzten 5 Transaktionen
-- [ ] Bottom-Navigation: Dashboard | Transaktionen | Eingabe (+) | Einstellungen
-- [ ] FAB (Floating Action Button) fuer schnelle Eingabe
+- [x] Bottom-Navigation: Dashboard | Transaktionen | Eingabe (+) | Einstellungen
+- [x] FAB (Floating Action Button) fuer schnelle Eingabe
 
 ### Einstellungen (Basis)
-- [ ] Waehrung waehlen (EUR Standard, CHF als Option)
-- [ ] Sprache waehlen (DE/EN)
-- [ ] Eingabe-Modus waehlen (Einzeltransaktion / Monatssummen)
-- [ ] Daten loeschen (mit Bestaetigung)
-- [ ] App-Version anzeigen
+- [x] Waehrung waehlen (EUR Standard, CHF als Option)
+- [x] Sprache waehlen (DE/EN)
+- [x] Eingabe-Modus waehlen (Einzeltransaktion / Monatssummen)
+- [x] Daten loeschen (mit Bestaetigung)
+- [x] App-Version anzeigen
 
 ---
 
@@ -338,7 +338,7 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 | Phase | Status | Zeitrahmen |
 |-------|--------|------------|
 | Phase 0: Setup & Architektur | **Abgeschlossen** | Woche 1 |
-| Phase 1a: Manuelle Eingabe (Kern-MVP) | Offen | Woche 2-3 |
+| Phase 1a: Manuelle Eingabe (Kern-MVP) | **In Review (PRs erstellt)** | Woche 2-3 |
 | Phase 1b: Visualisierung & Budgets | Offen | Woche 4-5 |
 | Phase 1c: Onboarding & Polish | Offen | Woche 6-7 |
 | Phase 1d: Launch-Features | Offen | Woche 8-10 |

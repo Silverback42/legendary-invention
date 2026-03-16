@@ -86,5 +86,12 @@
   "quickEntryPlaceholderTitle": "Quick-Entry – Phase 1a",
 
   "transactionsTitle": "Ausgaben",
-  "transactionsListPlaceholderTitle": "Transaktionsliste – Phase 1a"
+  "transactionsListPlaceholderTitle": "Transaktionsliste – Phase 1a",
+
+  "dataCleared": "Daten gelöscht",
+  "monthlySum": "Monatssumme {month}",
+  "@monthlySum": {
+    "placeholders": { "month": { "type": "String" } }
+  },
+  "deleteError": "Konnte nicht gelöscht werden. Bitte erneut versuchen."
 }
