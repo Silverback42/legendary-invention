@@ -98,6 +98,14 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
     if (result == null) return;
 
     final categories = await db.getAllCategories();
+    if (categories.length >= _freeTierLimit) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.categoryLimitReached)),
+        );
+      }
+      return;
+    }
     final maxSort = categories.isEmpty
         ? 0
         : categories.map((c) => c.sortOrder).reduce((a, b) => a > b ? a : b) + 1;
@@ -351,19 +359,24 @@ class _CategoryEditorSheetState extends State<_CategoryEditorSheet> {
               ),
               const SizedBox(width: 12),
               // Color picker
-              GestureDetector(
-                onTap: () async {
-                  final picked =
-                      await showColorPicker(context, current: _colorValue);
-                  if (picked != null) setState(() => _colorValue = picked);
-                },
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: Color(_colorValue),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: theme.dividerColor),
+              Semantics(
+                label: l10n.chooseColor,
+                button: true,
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () async {
+                    final picked =
+                        await showColorPicker(context, current: _colorValue);
+                    if (picked != null) setState(() => _colorValue = picked);
+                  },
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Color(_colorValue),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: theme.dividerColor),
+                    ),
                   ),
                 ),
               ),
@@ -371,10 +384,16 @@ class _CategoryEditorSheetState extends State<_CategoryEditorSheet> {
           ),
           const SizedBox(height: 24),
 
-          // Save button
-          ElevatedButton(
-            onPressed: _save,
-            child: Text(l10n.save),
+          // Save button (disabled when name is empty)
+          ValueListenableBuilder<TextEditingValue>(
+            valueListenable: _nameCtrl,
+            builder: (context, value, _) {
+              final hasName = value.text.trim().isNotEmpty;
+              return ElevatedButton(
+                onPressed: hasName ? _save : null,
+                child: Text(l10n.save),
+              );
+            },
           ),
         ],
       ),

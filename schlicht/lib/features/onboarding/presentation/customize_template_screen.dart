@@ -83,7 +83,7 @@ class _CustomizeTemplateScreenState
       if (mounted) {
         setState(() => _saving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Fehler beim Speichern. Bitte erneut versuchen.')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.genericError)),
         );
       }
     }
