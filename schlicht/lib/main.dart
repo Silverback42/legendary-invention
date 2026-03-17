@@ -4,6 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/db/database.dart';
 import 'core/routing/app_router.dart';
 import 'core/settings/app_settings.dart';
+import 'core/notifications/notification_provider.dart';
+import 'core/notifications/notification_service.dart';
+import 'core/widget/home_widget_service.dart';
+import 'core/subscription/subscription_provider.dart';
+import 'core/subscription/subscription_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/i18n/app_localizations.dart';
 
@@ -36,11 +41,24 @@ void main() async {
     await db.seedDefaultCategories();
   }
 
+  // Subscription-Service initialisieren (RevenueCat + lokaler Trial-State)
+  final subscriptionService = SubscriptionService(settingsNotifier);
+  await subscriptionService.initialize();
+
+  // Lokale Notifications initialisieren und Digest planen
+  await NotificationService.initialize();
+  await syncDigestSchedule(settings: settingsNotifier.state, db: db);
+
+  // Home-Widget initialisieren und Daten aktualisieren
+  await HomeWidgetService.initialize();
+  await HomeWidgetService.updateWidget(db: db, settings: settingsNotifier.state);
+
   runApp(
     ProviderScope(
       overrides: [
         databaseProvider.overrideWithValue(db),
         appSettingsProvider.overrideWith((_) => settingsNotifier),
+        subscriptionServiceProvider.overrideWithValue(subscriptionService),
       ],
       child: const SchlichtApp(),
     ),

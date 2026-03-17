@@ -177,6 +177,29 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteBudget(int id) =>
       (delete(budgets)..where((b) => b.id.equals(id))).go();
 
+  /// Alle Budgets fuer einen Monat laden (nicht-Stream-Variante).
+  Future<List<Budget>> getAllBudgets(int year, int month) =>
+      (select(budgets)
+            ..where((b) => b.year.equals(year) & b.month.equals(month)))
+          .get();
+
+  // ---------------------------------------------------------------------------
+  // Transactions (Date Range)
+  // ---------------------------------------------------------------------------
+
+  /// Transaktionen in einem beliebigen Zeitraum laden.
+  Future<List<Transaction>> getTransactionsForDateRange(
+    DateTime start,
+    DateTime end,
+  ) {
+    return (select(transactions)
+          ..where((t) =>
+              t.date.isBiggerOrEqualValue(start) &
+              t.date.isSmallerThanValue(end))
+          ..orderBy([(t) => OrderingTerm.desc(t.date)]))
+        .get();
+  }
+
   // ---------------------------------------------------------------------------
   // Accounts
   // ---------------------------------------------------------------------------

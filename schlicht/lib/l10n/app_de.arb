@@ -189,5 +189,45 @@
   "categoryInsurance": "Versicherungen",
   "categoryVacation": "Urlaub",
 
-  "retry": "Erneut versuchen"
+  "retry": "Erneut versuchen",
+
+  "shareFormatStory": "Story",
+  "shareFormatSquare": "Quadratisch",
+  "sharePreview": "Vorschau",
+  "shareButton": "Teilen",
+  "shareChooseFormat": "Format wählen",
+  "shareGenerating": "Wird erstellt…",
+  "shareImageTitle": "Monatsübersicht",
+
+  "subscriptionTitle": "Abo",
+  "premiumLabel": "Premium",
+  "freeLabel": "Kostenlos",
+  "trialDaysRemaining": "Trial: noch {days} Tage",
+  "@trialDaysRemaining": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "trialStart": "{days} Tage kostenlos testen",
+  "@trialStart": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "unlockPremium": "Premium freischalten",
+  "restorePurchases": "Kauf wiederherstellen",
+  "restoreNoPurchases": "Keine Käufe gefunden.",
+  "paywallTitle": "Alles freischalten",
+  "paywallSubtitle": "Hol das Beste aus Schlicht heraus.",
+  "paywallSkip": "Ohne Abo fortfahren",
+  "featureUnlimitedHistory": "Verlauf",
+  "featureLimited": "3 Monate",
+  "featureUnlimited": "Unbegrenzt",
+  "featureCategories": "Kategorien",
+  "featureHomeWidget": "Home-Widget",
+  "featureWeeklyDigest": "Wöchentlicher Digest",
+
+  "notificationsTitle": "Benachrichtigungen",
+  "weeklyDigestToggle": "Wöchentlicher Digest",
+  "weeklyDigestSubtitle": "Erhalte jeden Sonntag eine Ausgaben-Zusammenfassung.",
+
+  "widgetTitle": "Budget",
+  "widgetRemaining": "Noch verfügbar",
+  "widgetNoBudget": "Kein Budget gesetzt"
 }

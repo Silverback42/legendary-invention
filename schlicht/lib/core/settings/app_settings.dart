@@ -12,12 +12,16 @@ class AppSettings {
   final String locale; // 'de' or 'en'
   final String inputMode; // 'single' or 'monthly'
   final bool hasCompletedOnboarding;
+  final DateTime? trialStartDate;
+  final bool weeklyDigestEnabled;
 
   const AppSettings({
     this.currency = 'EUR',
     this.locale = 'de',
     this.inputMode = 'single',
     this.hasCompletedOnboarding = false,
+    this.trialStartDate,
+    this.weeklyDigestEnabled = false,
   });
 
   String get currencySymbol => currency == 'CHF' ? 'CHF' : '€';
@@ -30,6 +34,9 @@ class AppSettings {
     String? locale,
     String? inputMode,
     bool? hasCompletedOnboarding,
+    DateTime? trialStartDate,
+    bool clearTrialStartDate = false,
+    bool? weeklyDigestEnabled,
   }) {
     return AppSettings(
       currency: currency ?? this.currency,
@@ -37,6 +44,10 @@ class AppSettings {
       inputMode: inputMode ?? this.inputMode,
       hasCompletedOnboarding:
           hasCompletedOnboarding ?? this.hasCompletedOnboarding,
+      trialStartDate:
+          clearTrialStartDate ? null : (trialStartDate ?? this.trialStartDate),
+      weeklyDigestEnabled:
+          weeklyDigestEnabled ?? this.weeklyDigestEnabled,
     );
   }
 
@@ -45,15 +56,21 @@ class AppSettings {
         'locale': locale,
         'inputMode': inputMode,
         'hasCompletedOnboarding': hasCompletedOnboarding,
+        'trialStartDate': trialStartDate?.toIso8601String(),
+        'weeklyDigestEnabled': weeklyDigestEnabled,
       };
 
   factory AppSettings.fromJson(Map<String, dynamic> json) {
+    final trialStr = json['trialStartDate'] as String?;
     return AppSettings(
       currency: json['currency'] as String? ?? 'EUR',
       locale: json['locale'] as String? ?? 'de',
       inputMode: json['inputMode'] as String? ?? 'single',
       hasCompletedOnboarding:
           json['hasCompletedOnboarding'] as bool? ?? false,
+      trialStartDate: trialStr != null ? DateTime.tryParse(trialStr) : null,
+      weeklyDigestEnabled:
+          json['weeklyDigestEnabled'] as bool? ?? false,
     );
   }
 }
@@ -107,6 +124,16 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
 
   Future<void> completeOnboarding() async {
     state = state.copyWith(hasCompletedOnboarding: true);
+    await _persist();
+  }
+
+  Future<void> startTrial() async {
+    state = state.copyWith(trialStartDate: DateTime.now());
+    await _persist();
+  }
+
+  Future<void> setWeeklyDigestEnabled(bool enabled) async {
+    state = state.copyWith(weeklyDigestEnabled: enabled);
     await _persist();
   }
 }
