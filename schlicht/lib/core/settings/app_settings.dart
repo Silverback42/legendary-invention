@@ -14,6 +14,7 @@ class AppSettings {
   final bool hasCompletedOnboarding;
   final DateTime? trialStartDate;
   final bool weeklyDigestEnabled;
+  final String themeMode; // 'system', 'light', 'dark'
 
   const AppSettings({
     this.currency = 'EUR',
@@ -22,6 +23,7 @@ class AppSettings {
     this.hasCompletedOnboarding = false,
     this.trialStartDate,
     this.weeklyDigestEnabled = false,
+    this.themeMode = 'system',
   });
 
   String get currencySymbol => currency == 'CHF' ? 'CHF' : '€';
@@ -37,6 +39,7 @@ class AppSettings {
     DateTime? trialStartDate,
     bool clearTrialStartDate = false,
     bool? weeklyDigestEnabled,
+    String? themeMode,
   }) {
     return AppSettings(
       currency: currency ?? this.currency,
@@ -48,6 +51,7 @@ class AppSettings {
           clearTrialStartDate ? null : (trialStartDate ?? this.trialStartDate),
       weeklyDigestEnabled:
           weeklyDigestEnabled ?? this.weeklyDigestEnabled,
+      themeMode: themeMode ?? this.themeMode,
     );
   }
 
@@ -58,6 +62,7 @@ class AppSettings {
         'hasCompletedOnboarding': hasCompletedOnboarding,
         'trialStartDate': trialStartDate?.toIso8601String(),
         'weeklyDigestEnabled': weeklyDigestEnabled,
+        'themeMode': themeMode,
       };
 
   factory AppSettings.fromJson(Map<String, dynamic> json) {
@@ -71,6 +76,7 @@ class AppSettings {
       trialStartDate: trialStr != null ? DateTime.tryParse(trialStr) : null,
       weeklyDigestEnabled:
           json['weeklyDigestEnabled'] as bool? ?? false,
+      themeMode: json['themeMode'] as String? ?? 'system',
     );
   }
 }
@@ -136,6 +142,11 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
 
   Future<void> setWeeklyDigestEnabled(bool enabled) async {
     state = state.copyWith(weeklyDigestEnabled: enabled);
+    await _persist();
+  }
+
+  Future<void> setThemeMode(String mode) async {
+    state = state.copyWith(themeMode: mode);
     await _persist();
   }
 }

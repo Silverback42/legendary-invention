@@ -15,6 +15,9 @@ import '../../features/onboarding/presentation/life_situation_screen.dart';
 import '../../features/onboarding/presentation/customize_template_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/subscription/presentation/paywall_screen.dart';
+import '../../features/recurring/presentation/recurring_expenses_screen.dart';
+import '../../features/export/presentation/export_screen.dart';
+import '../../features/referral/presentation/referral_screen.dart';
 import '../../shared/widgets/main_scaffold.dart';
 import '../settings/app_settings.dart';
 
@@ -37,6 +40,11 @@ abstract class AppRoutes {
 
   // Subscription
   static const paywall = '/paywall';
+
+  // Phase 1.5
+  static const recurringExpenses = '/settings/recurring';
+  static const export = '/export';
+  static const referral = '/referral';
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -183,6 +191,32 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
           child: const CategoriesScreen(),
+          transitionsBuilder: _slideUpTransition,
+        ),
+      ),
+
+      // Phase 1.5 Routen
+      GoRoute(
+        path: AppRoutes.recurringExpenses,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const RecurringExpensesScreen(),
+          transitionsBuilder: _slideUpTransition,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.export,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const ExportScreen(),
+          transitionsBuilder: _slideUpTransition,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.referral,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const ReferralScreen(),
           transitionsBuilder: _slideUpTransition,
         ),
       ),

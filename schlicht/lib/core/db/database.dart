@@ -11,13 +11,13 @@ import 'seed_data.dart';
 
 part 'database.g.dart';
 
-/// Main Drift database. Offline-First source of truth.
-@DriftDatabase(tables: [Categories, Transactions, Budgets, Accounts])
+/// Drift-Datenbank. Offline-First Datenquelle.
+@DriftDatabase(tables: [Categories, Transactions, Budgets, Accounts, RecurringExpenses, Referrals])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -28,6 +28,11 @@ class AppDatabase extends _$AppDatabase {
       onUpgrade: (Migrator m, int from, int to) async {
         if (from < 2) {
           await m.addColumn(categories, categories.code);
+        }
+        if (from < 3) {
+          await m.addColumn(transactions, transactions.receiptPath);
+          await m.createTable(recurringExpenses);
+          await m.createTable(referrals);
         }
       },
     );
@@ -225,6 +230,114 @@ class AppDatabase extends _$AppDatabase {
     await transaction(() async {
       await batch((b) => b.insertAll(categories, defaultCategories));
     });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Wiederkehrende Ausgaben
+  // ---------------------------------------------------------------------------
+
+  Stream<List<RecurringExpense>> watchAllRecurringExpenses() =>
+      (select(recurringExpenses)..orderBy([(r) => OrderingTerm.desc(r.createdAt)])).watch();
+
+  Future<List<RecurringExpense>> getAllActiveRecurringExpenses() =>
+      (select(recurringExpenses)..where((r) => r.isActive.equals(true))).get();
+
+  Future<int> insertRecurringExpense(RecurringExpensesCompanion entry) =>
+      into(recurringExpenses).insert(entry);
+
+  Future<bool> updateRecurringExpense(RecurringExpense entry) =>
+      update(recurringExpenses).replace(entry);
+
+  Future<int> deleteRecurringExpense(int id) =>
+      (delete(recurringExpenses)..where((r) => r.id.equals(id))).go();
+
+  /// Generiert Transaktionen fuer faellige wiederkehrende Ausgaben.
+  Future<int> generateDueRecurringTransactions() async {
+    final activeExpenses = await getAllActiveRecurringExpenses();
+    final now = DateTime.now();
+    var generated = 0;
+
+    for (final expense in activeExpenses) {
+      final lastGenerated = expense.lastGeneratedAt;
+      final shouldGenerate = _isDue(expense, lastGenerated, now);
+
+      if (shouldGenerate) {
+        await transaction(() async {
+          await into(transactions).insert(TransactionsCompanion(
+            amount: Value(expense.amount),
+            categoryId: Value(expense.categoryId),
+            note: Value(expense.note),
+            date: Value(now),
+            recurringId: Value(expense.id),
+          ));
+
+          await (update(recurringExpenses)..where((r) => r.id.equals(expense.id)))
+              .write(RecurringExpensesCompanion(lastGeneratedAt: Value(now)));
+        });
+        generated++;
+      }
+    }
+    return generated;
+  }
+
+  /// Prueft ob eine wiederkehrende Ausgabe faellig ist.
+  bool _isDue(RecurringExpense expense, DateTime? lastGenerated, DateTime now) {
+    if (lastGenerated == null) return true;
+
+    switch (expense.frequency) {
+      case 'weekly':
+        return now.difference(lastGenerated).inDays >= 7;
+      case 'monthly':
+        final nextDue = DateTime(lastGenerated.year, lastGenerated.month + 1, expense.dayOfPeriod);
+        return now.isAfter(nextDue) || now.isAtSameMomentAs(nextDue);
+      case 'yearly':
+        final nextDue = DateTime(lastGenerated.year + 1, lastGenerated.month, expense.dayOfPeriod);
+        return now.isAfter(nextDue) || now.isAtSameMomentAs(nextDue);
+      default:
+        return false;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Referrals
+  // ---------------------------------------------------------------------------
+
+  Future<Referral?> getMyReferral() =>
+      (select(referrals)..limit(1)).getSingleOrNull();
+
+  Future<int> insertReferral(ReferralsCompanion entry) =>
+      into(referrals).insert(entry);
+
+  Future<void> incrementReferralCount(int id) async {
+    final current = await (select(referrals)..where((r) => r.id.equals(id))).getSingle();
+    await (update(referrals)..where((r) => r.id.equals(id))).write(
+      ReferralsCompanion(successfulCount: Value(current.successfulCount + 1)),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Transaktionen – Alle laden (fuer CSV-Export)
+  // ---------------------------------------------------------------------------
+
+  /// Alle Transaktionen laden, optional gefiltert nach Zeitraum und Kategorie.
+  Future<List<Transaction>> getFilteredTransactions({
+    DateTime? startDate,
+    DateTime? endDate,
+    int? categoryId,
+  }) {
+    final query = select(transactions)..orderBy([(t) => OrderingTerm.desc(t.date)]);
+
+    if (startDate != null) {
+      query.where((t) => t.date.isBiggerOrEqualValue(startDate));
+    }
+    if (endDate != null) {
+      query.where((t) => t.date.isSmallerThanValue(endDate));
+    }
+    if (categoryId != null) {
+      query.where((t) => t.categoryId.equals(categoryId));
+    }
+
+    return query.get();
   }
 
   // ---------------------------------------------------------------------------

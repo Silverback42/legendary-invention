@@ -229,5 +229,49 @@
 
   "widgetTitle": "Budget",
   "widgetRemaining": "Remaining",
-  "widgetNoBudget": "No budget set"
+  "widgetNoBudget": "No budget set",
+
+  "themeTitle": "Appearance",
+  "themeSystem": "Automatic (System)",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+
+  "recurringTitle": "Recurring expenses",
+  "recurringSubtitle": "Manage automatic transactions",
+  "noRecurringYet": "No recurring expenses yet.",
+  "noRecurringSubtitle": "Add regular expenses that will be booked automatically.",
+  "addRecurring": "Recurring expense",
+  "deleteRecurring": "Delete",
+  "deleteRecurringConfirm": "Really delete this recurring expense?",
+  "frequencyWeekly": "Weekly",
+  "frequencyMonthly": "Monthly",
+  "frequencyYearly": "Yearly",
+
+  "receiptAttach": "Attach receipt photo",
+  "receiptCamera": "Camera",
+  "receiptGallery": "Gallery",
+  "receiptPhotoTitle": "Receipt",
+
+  "exportTitle": "CSV Export",
+  "exportSubtitle": "Export transactions as CSV",
+  "exportDateRange": "Date range",
+  "exportFrom": "From",
+  "exportTo": "To",
+  "exportCategoryFilter": "Category",
+  "exportAllCategories": "All",
+  "exportButton": "Export as CSV",
+  "exportFreeHint": "Free for all users.",
+
+  "referralTitle": "Invite friends",
+  "referralSubtitle": "Get a free month of Premium",
+  "referralHeadline": "Invite your friends!",
+  "referralDescription": "For each successful referral, you'll receive a free month of Premium.",
+  "referralShareButton": "Share invitation",
+  "referralShareText": "Try Schlicht – the simplest budget app! Use my code:",
+  "referralShareSubject": "Schlicht – Budget App Invitation",
+  "referralCopied": "Invitation link copied!",
+  "referralSuccessCount": "{count, plural, one{1 successful referral} other{{count} successful referrals}}",
+  "@referralSuccessCount": {
+    "placeholders": { "count": { "type": "num" } }
+  }
 }

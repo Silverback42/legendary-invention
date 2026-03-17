@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 
-/// Database tables for Schlicht.
-/// Schema v1 – Phase 0.
+/// Datenbanktabellen für Schlicht.
+/// Schema v3 – Phase 1.5.
 
 class Categories extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -21,8 +21,11 @@ class Transactions extends Table {
   DateTimeColumn get date => dateTime()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
-  /// null = single transaction, non-null = recurring series id
+  /// null = einzelne Transaktion, non-null = wiederkehrende Serie
   IntColumn get recurringId => integer().nullable()();
+
+  /// Pfad zum Kassenbon-Foto (lokal gespeichert)
+  TextColumn get receiptPath => text().nullable()();
 }
 
 class Budgets extends Table {
@@ -43,4 +46,32 @@ class Accounts extends Table {
   TextColumn get name => text().withLength(min: 1, max: 100)();
   TextColumn get type => text().withDefault(const Constant('checking'))();  // checking | credit | cash | savings
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
+}
+
+/// Wiederkehrende Ausgaben – Vorlagen für automatische Buchungen.
+class RecurringExpenses extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  RealColumn get amount => real()();
+  IntColumn get categoryId => integer().references(Categories, #id)();
+  TextColumn get note => text().nullable()();
+
+  /// 'weekly', 'monthly', 'yearly'
+  TextColumn get frequency => text().withDefault(const Constant('monthly'))();
+
+  /// Tag im Monat (1-31) bzw. Wochentag (1-7 für weekly)
+  IntColumn get dayOfPeriod => integer().withDefault(const Constant(1))();
+
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  /// Letzte automatische Buchung
+  DateTimeColumn get lastGeneratedAt => dateTime().nullable()();
+}
+
+/// Referral-Tracking für das Einladungs-System.
+class Referrals extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get referralCode => text().withLength(min: 6, max: 20)();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  IntColumn get successfulCount => integer().withDefault(const Constant(0))();
 }

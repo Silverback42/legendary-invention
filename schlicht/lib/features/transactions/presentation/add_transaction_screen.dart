@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 import '../../../core/db/database.dart';
 import '../../../core/settings/app_settings.dart';
@@ -30,6 +35,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   final _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   bool _saving = false;
+  String? _receiptPath;
 
   double get _amount {
     if (_amountCents.isEmpty) return 0;
@@ -61,6 +67,55 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         }
       }
     });
+  }
+
+  /// Kassenbon-Foto aufnehmen oder aus Galerie waehlen.
+  Future<void> _pickReceipt() async {
+    final picker = ImagePicker();
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt_outlined),
+                title: Text(l10n.receiptCamera),
+                onTap: () => Navigator.pop(ctx, ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library_outlined),
+                title: Text(l10n.receiptGallery),
+                onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source == null) return;
+
+    try {
+      final image = await picker.pickImage(source: source, maxWidth: 1200, imageQuality: 85);
+      if (image == null) return;
+
+      // Foto in App-Verzeichnis kopieren
+      final dir = await getApplicationDocumentsDirectory();
+      final receiptsDir = Directory(p.join(dir.path, 'receipts'));
+      if (!await receiptsDir.exists()) {
+        await receiptsDir.create(recursive: true);
+      }
+      final ext = p.extension(image.path);
+      final fileName = 'receipt_${DateTime.now().millisecondsSinceEpoch}$ext';
+      final savedPath = p.join(receiptsDir.path, fileName);
+      await File(image.path).copy(savedPath);
+
+      setState(() => _receiptPath = savedPath);
+    } catch (e) {
+      debugPrint('Fehler beim Foto-Aufnehmen: $e');
+    }
   }
 
   Future<void> _selectDate() async {
@@ -103,6 +158,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             ? null
             : _noteController.text.trim()),
         date: Value(_selectedDate),
+        receiptPath: Value(_receiptPath),
       ));
       if (mounted) {
         Navigator.of(context).pop();
@@ -181,6 +237,40 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 );
               },
             ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // --- Kassenbon-Foto ---
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _receiptPath != null
+                ? Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(
+                          File(_receiptPath!),
+                          height: 80,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white),
+                        onPressed: () => setState(() => _receiptPath = null),
+                      ),
+                    ],
+                  )
+                : OutlinedButton.icon(
+                    onPressed: _pickReceipt,
+                    icon: const Icon(Icons.camera_alt_outlined, size: 18),
+                    label: Text(AppLocalizations.of(context)!.receiptAttach),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 44),
+                    ),
+                  ),
           ),
 
           const SizedBox(height: 12),
