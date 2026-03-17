@@ -11,14 +11,9 @@ import '../../../core/settings/app_settings.dart';
 import '../../../core/subscription/subscription_provider.dart';
 import '../../../core/subscription/subscription_status.dart';
 
-/// Settings screen – Phase 1a.
+/// Settings Screen – Phase 1.5.
 ///
-/// Allows the user to configure:
-/// - Currency (EUR / CHF)
-/// - Language (DE / EN)
-/// - Input mode (single transaction / monthly totals)
-/// - Clear all data
-/// - App version
+/// Erweitert um: Dark Mode, Wiederkehrende Ausgaben, CSV-Export, Referral.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -33,6 +28,31 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.only(bottom: 80),
         children: [
+          // --- Dark Mode ---
+          _SectionHeader(l10n.themeTitle),
+          RadioListTile<String>(
+            title: Text(l10n.themeSystem),
+            secondary: const Icon(Icons.brightness_auto_outlined),
+            value: 'system',
+            groupValue: settings.themeMode,
+            onChanged: (v) => notifier.setThemeMode(v!),
+          ),
+          RadioListTile<String>(
+            title: Text(l10n.themeLight),
+            secondary: const Icon(Icons.light_mode_outlined),
+            value: 'light',
+            groupValue: settings.themeMode,
+            onChanged: (v) => notifier.setThemeMode(v!),
+          ),
+          RadioListTile<String>(
+            title: Text(l10n.themeDark),
+            secondary: const Icon(Icons.dark_mode_outlined),
+            value: 'dark',
+            groupValue: settings.themeMode,
+            onChanged: (v) => notifier.setThemeMode(v!),
+          ),
+          const Divider(),
+
           // --- Currency ---
           _SectionHeader(l10n.currency),
           RadioListTile<String>(
@@ -90,6 +110,36 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const Divider(),
 
+          // --- Wiederkehrende Ausgaben ---
+          ListTile(
+            leading: const Icon(Icons.repeat_outlined),
+            title: Text(l10n.recurringTitle),
+            subtitle: Text(l10n.recurringSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.recurringExpenses),
+          ),
+          const Divider(),
+
+          // --- CSV-Export ---
+          ListTile(
+            leading: const Icon(Icons.file_download_outlined),
+            title: Text(l10n.exportTitle),
+            subtitle: Text(l10n.exportSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.export),
+          ),
+          const Divider(),
+
+          // --- Referral ---
+          ListTile(
+            leading: const Icon(Icons.card_giftcard_outlined),
+            title: Text(l10n.referralTitle),
+            subtitle: Text(l10n.referralSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.referral),
+          ),
+          const Divider(),
+
           // --- Subscription ---
           _SectionHeader(l10n.subscriptionTitle),
           _SubscriptionTile(),
@@ -135,7 +185,7 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: Text(l10n.appVersion),
-            subtitle: const Text('1.0.0'),
+            subtitle: const Text('1.1.0'),
           ),
         ],
       ),

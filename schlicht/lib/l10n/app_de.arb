@@ -229,5 +229,56 @@
 
   "widgetTitle": "Budget",
   "widgetRemaining": "Noch verfügbar",
-  "widgetNoBudget": "Kein Budget gesetzt"
+  "widgetNoBudget": "Kein Budget gesetzt",
+
+  "themeTitle": "Erscheinungsbild",
+  "themeSystem": "Automatisch (System)",
+  "themeLight": "Hell",
+  "themeDark": "Dunkel",
+
+  "recurringTitle": "Wiederkehrende Ausgaben",
+  "recurringSubtitle": "Automatische Buchungen verwalten",
+  "noRecurringYet": "Noch keine wiederkehrenden Ausgaben.",
+  "noRecurringSubtitle": "Füge regelmäßige Ausgaben hinzu, die automatisch gebucht werden.",
+  "addRecurring": "Wiederkehrende Ausgabe",
+  "deleteRecurring": "Löschen",
+  "deleteRecurringConfirm": "Wiederkehrende Ausgabe wirklich löschen?",
+  "frequencyWeekly": "Wöchentlich",
+  "frequencyMonthly": "Monatlich",
+  "frequencyYearly": "Jährlich",
+
+  "receiptAttach": "Kassenbon fotografieren",
+  "receiptCamera": "Kamera",
+  "receiptGallery": "Galerie",
+  "receiptPhotoTitle": "Kassenbon",
+
+  "exportTitle": "CSV-Export",
+  "exportSubtitle": "Transaktionen als CSV exportieren",
+  "exportDateRange": "Zeitraum",
+  "exportFrom": "Von",
+  "exportTo": "Bis",
+  "exportCategoryFilter": "Kategorie",
+  "exportAllCategories": "Alle",
+  "exportButton": "Als CSV exportieren",
+  "exportFreeHint": "Kostenlos für alle Nutzer.",
+
+  "csvHeaderDate": "Datum",
+  "csvHeaderCategory": "Kategorie",
+  "csvHeaderAmount": "Betrag",
+  "csvHeaderCurrency": "Waehrung",
+  "csvHeaderNote": "Notiz",
+  "csvShareSubject": "Schlicht Export",
+
+  "referralTitle": "Freunde einladen",
+  "referralSubtitle": "Premium-Monat geschenkt bekommen",
+  "referralHeadline": "Lade Freunde ein!",
+  "referralDescription": "Für jede erfolgreiche Einladung erhältst du einen Monat Premium geschenkt.",
+  "referralShareButton": "Einladung teilen",
+  "referralShareText": "Probier Schlicht aus – die einfachste Budget-App! Nutze meinen Code:",
+  "referralShareSubject": "Schlicht – Budget-App Einladung",
+  "referralCopied": "Einladungslink kopiert!",
+  "referralSuccessCount": "{count, plural, one{1 erfolgreiche Einladung} other{{count} erfolgreiche Einladungen}}",
+  "@referralSuccessCount": {
+    "placeholders": { "count": { "type": "num" } }
+  }
 }

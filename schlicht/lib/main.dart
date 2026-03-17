@@ -65,6 +65,16 @@ void main() async {
     debugPrint('HomeWidgetService init fehlgeschlagen: $e');
   }
 
+  // Wiederkehrende Ausgaben generieren (Phase 1.5)
+  try {
+    final generated = await db.generateDueRecurringTransactions();
+    if (generated > 0) {
+      debugPrint('$generated wiederkehrende Transaktionen generiert.');
+    }
+  } on Exception catch (e) {
+    debugPrint('Recurring-Generierung fehlgeschlagen: $e');
+  }
+
   runApp(
     ProviderScope(
       overrides: [
@@ -80,13 +90,27 @@ void main() async {
 class SchlichtApp extends ConsumerWidget {
   const SchlichtApp({super.key});
 
+  static ThemeMode _resolveThemeMode(String mode) {
+    switch (mode) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      default:
+        return ThemeMode.system;
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+    final settings = ref.watch(appSettingsProvider);
 
     return MaterialApp.router(
       title: 'Schlicht',
       theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: _resolveThemeMode(settings.themeMode),
       localizationsDelegates: AppLocalizationsWrapper.localizationsDelegates,
       supportedLocales: AppLocalizationsWrapper.supportedLocales,
       routerConfig: router,

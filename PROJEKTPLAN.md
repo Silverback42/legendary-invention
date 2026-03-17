@@ -207,33 +207,33 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 > **Ziel: Schnelle Verbesserungen basierend auf ersten Nutzer-Daten.**
 
 ### Dark Mode (R-018)
-- [ ] Dark-Theme-Farbpalette definieren
-- [ ] Theme-Switching implementieren (System-automatisch + manuell)
+- [x] Dark-Theme-Farbpalette definieren
+- [x] Theme-Switching implementieren (System-automatisch + manuell)
 - [ ] Alle Screens in Dark Mode testen
 - [ ] Als Marketing-Moment kommunizieren: "Dark Mode ist da!"
 
 ### Wiederkehrende Ausgaben (R-013)
-- [ ] Frequenz-Auswahl: wöchentlich / monatlich / jährlich
-- [ ] Automatische Buchung am gewählten Tag
-- [ ] Bearbeiten / Löschen (nur zukünftige / alle)
-- [ ] Übersicht aller wiederkehrenden Ausgaben in Einstellungen
+- [x] Frequenz-Auswahl: wöchentlich / monatlich / jährlich
+- [x] Automatische Buchung am gewählten Tag
+- [x] Bearbeiten / Löschen (nur zukünftige / alle)
+- [x] Übersicht aller wiederkehrenden Ausgaben in Einstellungen
 
 ### Kassenbon-Foto (R-016)
-- [ ] Kamera-Integration (image_picker)
-- [ ] Foto an Transaktion anhaengen (lokal gespeichert)
-- [ ] Foto in Transaktions-Detail anzeigen
-- [ ] "Foto jetzt, Details spaeter"-Workflow
+- [x] Kamera-Integration (image_picker)
+- [x] Foto an Transaktion anhaengen (lokal gespeichert)
+- [x] Foto in Transaktions-Detail anzeigen
+- [x] "Foto jetzt, Details spaeter"-Workflow
 
 ### CSV-Export (R-022)
-- [ ] Export aller Transaktionen als CSV
-- [ ] Filter: Zeitraum, Kategorie
-- [ ] Share-Sheet zum Versenden
-- [ ] Kostenlos fuer alle Nutzer
+- [x] Export aller Transaktionen als CSV
+- [x] Filter: Zeitraum, Kategorie
+- [x] Share-Sheet zum Versenden
+- [x] Kostenlos fuer alle Nutzer
 
 ### Referral-System
-- [ ] Einladungs-Link generieren
-- [ ] Premium-Monat geschenkt fuer Einlader bei erfolgreicher Empfehlung
-- [ ] Tracking ueber Deep Links
+- [x] Einladungs-Link generieren
+- [x] Premium-Monat geschenkt fuer Einlader bei erfolgreicher Empfehlung
+- [x] Tracking ueber Deep Links
 
 ---
 
