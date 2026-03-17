@@ -96,7 +96,8 @@ class _CustomizeTemplateScreenState
 
       await settingsNotifier.completeOnboarding();
 
-      if (mounted) context.go(AppRoutes.dashboard);
+      // Zur Paywall navigieren, damit der User Trial/Premium waehlen kann
+      if (mounted) context.go(AppRoutes.paywall);
     } catch (_) {
       if (mounted) {
         setState(() => _saving = false);

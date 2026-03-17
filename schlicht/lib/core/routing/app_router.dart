@@ -14,6 +14,7 @@ import '../../features/onboarding/presentation/welcome_screen.dart';
 import '../../features/onboarding/presentation/life_situation_screen.dart';
 import '../../features/onboarding/presentation/customize_template_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/subscription/presentation/paywall_screen.dart';
 import '../../shared/widgets/main_scaffold.dart';
 import '../settings/app_settings.dart';
 
@@ -33,6 +34,9 @@ abstract class AppRoutes {
   static const onboarding = '/onboarding';
   static const onboardingLifeSituation = '/onboarding/life-situation';
   static const onboardingCustomize = '/onboarding/customize';
+
+  // Subscription
+  static const paywall = '/paywall';
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -80,6 +84,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             transitionsBuilder: _slideUpTransition,
           );
         },
+      ),
+
+      // Paywall (no bottom nav)
+      GoRoute(
+        path: AppRoutes.paywall,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const PaywallScreen(),
+          transitionsBuilder: _slideUpTransition,
+        ),
       ),
 
       // Main app (with bottom nav shell)

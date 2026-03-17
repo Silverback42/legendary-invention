@@ -4,8 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/db/database.dart';
+import '../../../core/notifications/notification_provider.dart';
+import '../../../core/notifications/notification_service.dart';
 import '../../../core/routing/app_router.dart';
 import '../../../core/settings/app_settings.dart';
+import '../../../core/subscription/subscription_provider.dart';
+import '../../../core/subscription/subscription_status.dart';
 
 /// Settings screen – Phase 1a.
 ///
@@ -86,6 +90,33 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const Divider(),
 
+          // --- Subscription ---
+          _SectionHeader(l10n.subscriptionTitle),
+          _SubscriptionTile(),
+          const Divider(),
+
+          // --- Notifications ---
+          _SectionHeader(l10n.notificationsTitle),
+          SwitchListTile(
+            secondary: const Icon(Icons.notifications_outlined),
+            title: Text(l10n.weeklyDigestToggle),
+            subtitle: Text(l10n.weeklyDigestSubtitle),
+            value: settings.weeklyDigestEnabled,
+            onChanged: (enabled) async {
+              if (enabled) {
+                final granted = await NotificationService.requestPermission();
+                if (!granted) return;
+              }
+              await notifier.setWeeklyDigestEnabled(enabled);
+              final db = ref.read(databaseProvider);
+              await syncDigestSchedule(
+                settings: ref.read(appSettingsProvider),
+                db: db,
+              );
+            },
+          ),
+          const Divider(),
+
           // --- Clear data ---
           ListTile(
             leading: Icon(
@@ -163,6 +194,78 @@ class _SectionHeader extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
       ),
+    );
+  }
+}
+
+/// Abo-Status und Aktionen in den Settings.
+class _SubscriptionTile extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final statusAsync = ref.watch(subscriptionStatusProvider);
+
+    return statusAsync.when(
+      loading: () => const ListTile(
+        leading: SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+        title: Text('…'),
+      ),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (status) {
+        final String statusLabel;
+        final IconData statusIcon;
+
+        switch (status.tier) {
+          case SubscriptionTier.premium:
+            statusLabel = l10n.premiumLabel;
+            statusIcon = Icons.star;
+          case SubscriptionTier.trial:
+            statusLabel = l10n.trialDaysRemaining(status.trialDaysRemaining);
+            statusIcon = Icons.hourglass_top;
+          case SubscriptionTier.free:
+            statusLabel = l10n.freeLabel;
+            statusIcon = Icons.lock_outline;
+        }
+
+        return Column(
+          children: [
+            ListTile(
+              leading: Icon(statusIcon),
+              title: Text(statusLabel),
+            ),
+            if (status.tier == SubscriptionTier.free) ...[
+              ListTile(
+                leading: const Icon(Icons.star_outline),
+                title: Text(l10n.unlockPremium),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(AppRoutes.paywall),
+              ),
+            ],
+            ListTile(
+              leading: const Icon(Icons.restore),
+              title: Text(l10n.restorePurchases),
+              onTap: () async {
+                final service = ref.read(subscriptionServiceProvider);
+                final success = await service.restorePurchases();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        success ? l10n.premiumLabel : l10n.restoreNoPurchases,
+                      ),
+                    ),
+                  );
+                  if (success) ref.invalidate(subscriptionStatusProvider);
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

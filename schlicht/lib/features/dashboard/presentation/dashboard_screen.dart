@@ -14,6 +14,9 @@ import '../../../shared/utils/category_icon.dart';
 import '../../../shared/widgets/category_donut_chart.dart';
 import '../../../shared/widgets/category_bar_chart.dart';
 import '../../../shared/widgets/skeleton_loader.dart';
+import '../../../core/widget/home_widget_service.dart';
+import '../../sharing/presentation/share_bottom_sheet.dart';
+import '../../sharing/services/share_image_service.dart';
 
 /// Dashboard – Phase 1b Bento-Grid version.
 ///
@@ -34,6 +37,9 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _showBarChart = false;
 
+  // Letzter Snapshot fuer Aktionen ausserhalb des StreamBuilders (z.B. Share-Button)
+  _DashboardData? _lastData;
+
   // Cached stream to avoid resubscription on unrelated rebuilds (e.g. chart toggle)
   Stream<_DashboardData>? _dashboardStream;
   AppDatabase? _cachedDb;
@@ -51,6 +57,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       _dashboardStream = _watchDashboardData(db, year, month);
     }
     return _dashboardStream!;
+  }
+
+  Future<void> _syncHomeWidget(AppDatabase db, AppSettings settings) async {
+    try {
+      await HomeWidgetService.updateWidget(db: db, settings: settings);
+    } on Exception {
+      // Fehler beim Widget-Sync sind nicht kritisch.
+    }
   }
 
   @override
@@ -71,6 +85,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         title: const Text('Schlicht'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.share),
+            tooltip: l10n.shareMonth,
+            onPressed: _lastData != null &&
+                    _lastData!.chartData.isNotEmpty
+                ? () => ShareBottomSheet.show(
+                      context,
+                      ShareData(
+                        chartData: _lastData!.chartData,
+                        year: year,
+                        month: month,
+                        locale: settings.locale,
+                      ),
+                    )
+                : null,
+          ),
+          IconButton(
             icon: const Icon(Icons.history),
             tooltip: l10n.history,
             onPressed: () => context.go(AppRoutes.history),
@@ -81,6 +111,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         stream: _getStream(db, year, month),
         builder: (context, snap) {
           final data = snap.data;
+
+          // Snapshot cachen fuer Aktionen ausserhalb des StreamBuilders
+          if (data != null && data != _lastData) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) setState(() => _lastData = data);
+              // Home-Widget mit aktuellen Daten aktualisieren
+              _syncHomeWidget(db, settings);
+            });
+          }
 
           if (data == null && snap.connectionState == ConnectionState.waiting) {
             return const DashboardSkeleton();

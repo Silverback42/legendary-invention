@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/db/database.dart';
 import '../../../core/settings/app_settings.dart';
+import '../../../core/subscription/subscription_provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/utils/category_icon.dart';
 import '../../../shared/widgets/category_donut_chart.dart';
@@ -29,8 +30,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   bool _showBarChart = false;
   Future<_HistoryData>? _historyFuture;
 
-  // Free tier: 3 months back
+  // Free tier: 3 Monate zurueck, Premium: 12 Monate
   static const int _freeMonthLimit = 3;
+  static const int _premiumMonthLimit = 12;
 
   @override
   void initState() {
@@ -61,9 +63,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     final now = DateTime.now();
     if (y > now.year || (y == now.year && m > now.month)) return;
 
-    // Free tier limit
+    // Monats-Limit (Free: 3, Premium: 12)
     final newMonthsBack = (now.year - y) * 12 + (now.month - m);
-    if (newMonthsBack > _freeMonthLimit) return;
+    final isPremium = ref.read(isPremiumProvider).valueOrNull ?? false;
+    final limit = isPremium ? _premiumMonthLimit : _freeMonthLimit;
+    if (newMonthsBack > limit) return;
 
     setState(() {
       _month = m;
@@ -88,6 +92,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     final l10n = AppLocalizations.of(context)!;
     final db = ref.watch(databaseProvider);
     final settings = ref.watch(appSettingsProvider);
+    final isPremiumAsync = ref.watch(isPremiumProvider);
+    final isPremium = isPremiumAsync.valueOrNull ?? false;
+    final monthLimit = isPremium ? _premiumMonthLimit : _freeMonthLimit;
     final fmt = NumberFormat.currency(
       locale: settings.fullLocale,
       symbol: settings.currencySymbol,
@@ -114,12 +121,12 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             l10n: l10n,
             onPrevious: () => _changeMonth(-1),
             onNext: () => _changeMonth(1),
-            canGoBack: _monthsBack < _freeMonthLimit,
+            canGoBack: _monthsBack < monthLimit,
             canGoForward: _monthsBack > 0,
           ),
 
-          // Limit hint
-          if (_monthsBack >= _freeMonthLimit)
+          // Limit-Hinweis (nur im Free-Tier)
+          if (!isPremium && _monthsBack >= monthLimit)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(

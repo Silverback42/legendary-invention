@@ -189,5 +189,45 @@
   "categoryInsurance": "Insurance",
   "categoryVacation": "Vacation",
 
-  "retry": "Retry"
+  "retry": "Retry",
+
+  "shareFormatStory": "Story",
+  "shareFormatSquare": "Square",
+  "sharePreview": "Preview",
+  "shareButton": "Share",
+  "shareChooseFormat": "Choose format",
+  "shareGenerating": "Generating…",
+  "shareImageTitle": "Monthly summary",
+
+  "subscriptionTitle": "Subscription",
+  "premiumLabel": "Premium",
+  "freeLabel": "Free",
+  "trialDaysRemaining": "{days, plural, one{Trial: 1 day left} other{Trial: {days} days left}}",
+  "@trialDaysRemaining": {
+    "placeholders": { "days": { "type": "num" } }
+  },
+  "trialStart": "{days, plural, one{Try free for 1 day} other{Try free for {days} days}}",
+  "@trialStart": {
+    "placeholders": { "days": { "type": "num" } }
+  },
+  "unlockPremium": "Unlock Premium",
+  "restorePurchases": "Restore purchases",
+  "restoreNoPurchases": "No purchases found.",
+  "paywallTitle": "Unlock everything",
+  "paywallSubtitle": "Get the most out of Schlicht.",
+  "paywallSkip": "Continue without",
+  "featureUnlimitedHistory": "History",
+  "featureLimited": "3 months",
+  "featureUnlimited": "Unlimited",
+  "featureCategories": "Categories",
+  "featureHomeWidget": "Home widget",
+  "featureWeeklyDigest": "Weekly digest",
+
+  "notificationsTitle": "Notifications",
+  "weeklyDigestToggle": "Weekly digest",
+  "weeklyDigestSubtitle": "Get a spending summary every Sunday.",
+
+  "widgetTitle": "Budget",
+  "widgetRemaining": "Remaining",
+  "widgetNoBudget": "No budget set"
 }
