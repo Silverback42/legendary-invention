@@ -17,6 +17,7 @@ Future<void> syncDigestSchedule({
     final digest = await DigestCalculator.calculate(
       db: db,
       locale: settings.locale,
+      currency: settings.currency,
     );
     await NotificationService.scheduleWeeklyDigest(
       title: digest.title,

@@ -202,13 +202,13 @@
   "subscriptionTitle": "Abo",
   "premiumLabel": "Premium",
   "freeLabel": "Kostenlos",
-  "trialDaysRemaining": "Trial: noch {days} Tage",
+  "trialDaysRemaining": "{days, plural, one{Trial: noch 1 Tag} other{Trial: noch {days} Tage}}",
   "@trialDaysRemaining": {
-    "placeholders": { "days": { "type": "int" } }
+    "placeholders": { "days": { "type": "num" } }
   },
-  "trialStart": "{days} Tage kostenlos testen",
+  "trialStart": "{days, plural, one{1 Tag kostenlos testen} other{{days} Tage kostenlos testen}}",
   "@trialStart": {
-    "placeholders": { "days": { "type": "int" } }
+    "placeholders": { "days": { "type": "num" } }
   },
   "unlockPremium": "Premium freischalten",
   "restorePurchases": "Kauf wiederherstellen",

@@ -202,13 +202,13 @@
   "subscriptionTitle": "Subscription",
   "premiumLabel": "Premium",
   "freeLabel": "Free",
-  "trialDaysRemaining": "Trial: {days} days left",
+  "trialDaysRemaining": "{days, plural, one{Trial: 1 day left} other{Trial: {days} days left}}",
   "@trialDaysRemaining": {
-    "placeholders": { "days": { "type": "int" } }
+    "placeholders": { "days": { "type": "num" } }
   },
-  "trialStart": "Try free for {days} days",
+  "trialStart": "{days, plural, one{Try free for 1 day} other{Try free for {days} days}}",
   "@trialStart": {
-    "placeholders": { "days": { "type": "int" } }
+    "placeholders": { "days": { "type": "num" } }
   },
   "unlockPremium": "Unlock Premium",
   "restorePurchases": "Restore purchases",

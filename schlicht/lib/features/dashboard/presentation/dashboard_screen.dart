@@ -59,6 +59,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return _dashboardStream!;
   }
 
+  Future<void> _syncHomeWidget(AppDatabase db, AppSettings settings) async {
+    try {
+      await HomeWidgetService.updateWidget(db: db, settings: settings);
+    } on Exception {
+      // Fehler beim Widget-Sync sind nicht kritisch.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -108,9 +116,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           if (data != null && data != _lastData) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) setState(() => _lastData = data);
+              // Home-Widget mit aktuellen Daten aktualisieren
+              _syncHomeWidget(db, settings);
             });
-            // Home-Widget mit aktuellen Daten aktualisieren
-            HomeWidgetService.updateWidget(db: db, settings: settings);
           }
 
           if (data == null && snap.connectionState == ConnectionState.waiting) {

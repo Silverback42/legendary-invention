@@ -20,31 +20,31 @@
 ### 1. Dashboard-Übersicht
 - Zeigt: Donut-Chart, Budget-Fortschritt, Top-Kategorie
 - Text (DE): „Alles auf einen Blick"
-- Text (EN): „Everything at a glance"
+- Text (EN): "Everything at a glance"
 
 ### 2. Schnelle Eingabe
 - Zeigt: Add-Transaction-Screen mit ausgefülltem Formular
 - Text (DE): „Unter 3 Sekunden"
-- Text (EN): „Under 3 seconds"
+- Text (EN): "Under 3 seconds"
 
 ### 3. Budget-Tracking
 - Zeigt: Budget-Screen mit Fortschrittsbalken
 - Text (DE): „Immer im grünen Bereich"
-- Text (EN): „Always on track"
+- Text (EN): "Always on track"
 
 ### 4. Monatsvergleich
 - Zeigt: History-Screen mit Trend-Vergleich
 - Text (DE): „Erkenne deine Trends"
-- Text (EN): „Spot your trends"
+- Text (EN): "Spot your trends"
 
 ### 5. Privatsphäre
 - Zeigt: Settings-Screen oder Onboarding-Privacy-Slide
 - Text (DE): „Privat & Offline"
-- Text (EN): „Private & Offline"
+- Text (EN): "Private & Offline"
 
 ## Farben / Branding
 
-- Hintergrund: #FFFFFF (weiss)
+- Hintergrund: #FFFFFF (weiß)
 - Text: #1A1A2E (deep navy)
 - Akzent: #4CAF82 (soft green)
 - Geräterahmen: Minimal, dunkel

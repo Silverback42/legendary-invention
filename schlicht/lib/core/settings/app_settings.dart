@@ -128,6 +128,8 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
   }
 
   Future<void> startTrial() async {
+    // Trial nur einmal starten — verhindert Neustart/Verlaengerung.
+    if (state.trialStartDate != null) return;
     state = state.copyWith(trialStartDate: DateTime.now());
     await _persist();
   }

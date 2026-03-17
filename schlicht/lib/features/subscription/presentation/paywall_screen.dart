@@ -31,13 +31,22 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   }
 
   Future<void> _loadOfferings() async {
-    final service = ref.read(subscriptionServiceProvider);
-    final offerings = await service.getOfferings();
-    if (mounted) {
-      setState(() {
-        _offerings = offerings;
-        _loading = false;
-      });
+    try {
+      final service = ref.read(subscriptionServiceProvider);
+      final offerings = await service.getOfferings();
+      if (mounted) {
+        setState(() {
+          _offerings = offerings;
+          _loading = false;
+        });
+      }
+    } on Exception {
+      if (mounted) {
+        setState(() {
+          _offerings = null;
+          _loading = false;
+        });
+      }
     }
   }
 

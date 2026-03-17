@@ -43,15 +43,27 @@ void main() async {
 
   // Subscription-Service initialisieren (RevenueCat + lokaler Trial-State)
   final subscriptionService = SubscriptionService(settingsNotifier);
-  await subscriptionService.initialize();
+  try {
+    await subscriptionService.initialize();
+  } on Exception catch (e) {
+    debugPrint('SubscriptionService init fehlgeschlagen: $e');
+  }
 
   // Lokale Notifications initialisieren und Digest planen
-  await NotificationService.initialize();
-  await syncDigestSchedule(settings: settingsNotifier.state, db: db);
+  try {
+    await NotificationService.initialize();
+    await syncDigestSchedule(settings: settingsNotifier.state, db: db);
+  } on Exception catch (e) {
+    debugPrint('NotificationService init fehlgeschlagen: $e');
+  }
 
   // Home-Widget initialisieren und Daten aktualisieren
-  await HomeWidgetService.initialize();
-  await HomeWidgetService.updateWidget(db: db, settings: settingsNotifier.state);
+  try {
+    await HomeWidgetService.initialize();
+    await HomeWidgetService.updateWidget(db: db, settings: settingsNotifier.state);
+  } on Exception catch (e) {
+    debugPrint('HomeWidgetService init fehlgeschlagen: $e');
+  }
 
   runApp(
     ProviderScope(

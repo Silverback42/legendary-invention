@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -16,24 +18,39 @@ import 'subscription_status.dart';
 class SubscriptionService {
   final AppSettingsNotifier _settingsNotifier;
   bool _initialized = false;
+  Completer<void>? _initCompleter;
 
   SubscriptionService(this._settingsNotifier);
 
   /// RevenueCat initialisieren. Muss einmal beim App-Start aufgerufen werden.
+  ///
+  /// Reentrancy-sicher: parallele Aufrufe warten auf dasselbe Future.
   Future<void> initialize() async {
     if (_initialized) return;
+    if (_initCompleter != null) return _initCompleter!.future;
 
+    _initCompleter = Completer<void>();
     try {
+      if (!SubscriptionConstants.hasValidKeys) {
+        debugPrint('RevenueCat: Placeholder-Keys erkannt, ueberspringe Konfiguration');
+        _initCompleter!.complete();
+        return;
+      }
+
       final apiKey = Platform.isIOS
           ? SubscriptionConstants.revenueCatApiKeyIos
           : SubscriptionConstants.revenueCatApiKeyAndroid;
 
       await Purchases.configure(PurchasesConfiguration(apiKey));
       _initialized = true;
+      _initCompleter!.complete();
     } catch (e) {
       // RevenueCat nicht verfuegbar (z.B. Emulator ohne Play Services).
       // App funktioniert trotzdem — Trial laeuft offline.
       debugPrint('RevenueCat init failed: $e');
+      _initCompleter!.complete();
+    } finally {
+      _initCompleter = null;
     }
   }
 
@@ -59,9 +76,12 @@ class SubscriptionService {
     // 2. Lokalen Trial pruefen
     final trialStart = _settingsNotifier.state.trialStartDate;
     if (trialStart != null) {
-      final daysElapsed = DateTime.now().difference(trialStart).inDays;
-      final daysRemaining =
-          SubscriptionConstants.trialDurationDays - daysElapsed;
+      final daysElapsed =
+          max(0, DateTime.now().difference(trialStart).inDays);
+      final daysRemaining = max(
+        0,
+        SubscriptionConstants.trialDurationDays - daysElapsed,
+      );
 
       if (daysRemaining > 0) {
         return SubscriptionStatus(
@@ -85,7 +105,8 @@ class SubscriptionService {
     final trialStart = _settingsNotifier.state.trialStartDate;
     if (trialStart == null) return false;
 
-    final daysElapsed = DateTime.now().difference(trialStart).inDays;
+    final daysElapsed =
+        max(0, DateTime.now().difference(trialStart).inDays);
     return daysElapsed < SubscriptionConstants.trialDurationDays;
   }
 

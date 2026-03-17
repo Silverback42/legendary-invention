@@ -188,10 +188,15 @@ class AppDatabase extends _$AppDatabase {
   // ---------------------------------------------------------------------------
 
   /// Transaktionen in einem beliebigen Zeitraum laden.
+  ///
+  /// [start] muss vor [end] liegen.
   Future<List<Transaction>> getTransactionsForDateRange(
     DateTime start,
     DateTime end,
   ) {
+    if (!start.isBefore(end)) {
+      throw ArgumentError('start ($start) muss vor end ($end) liegen');
+    }
     return (select(transactions)
           ..where((t) =>
               t.date.isBiggerOrEqualValue(start) &

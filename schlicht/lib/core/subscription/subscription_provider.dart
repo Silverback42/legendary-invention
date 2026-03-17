@@ -17,6 +17,8 @@ final subscriptionServiceProvider = Provider<SubscriptionService>((ref) {
 ///
 /// Wird bei Aenderungen an appSettingsProvider automatisch neu berechnet.
 final subscriptionStatusProvider = FutureProvider<SubscriptionStatus>((ref) {
+  // State beobachten, damit der Provider bei Settings-Aenderungen neu berechnet wird.
+  ref.watch(appSettingsProvider);
   final service = ref.watch(subscriptionServiceProvider);
   return service.getStatus();
 });

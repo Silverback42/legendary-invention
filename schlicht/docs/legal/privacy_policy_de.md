@@ -45,11 +45,11 @@ Deine Finanzdaten werden an **niemanden** weitergegeben. Die einzige Datenüberm
 
 ## 6. Speicherdauer
 
-Lokale Daten werden gespeichert, bis du sie löschst (Einstellungen → „Alle Daten löschen") oder die App deinstallierst.
+Lokale Daten werden gespeichert, bis du sie löschst (Einstellungen → „Alle Daten löschen”) oder die App deinstallierst. Daten bei RevenueCat (siehe 3.2) werden gemäß deren Aufbewahrungsrichtlinie gespeichert; Details findest du unter https://www.revenuecat.com/privacy.
 
 ## 7. Deine Rechte
 
-Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Datenübertragbarkeit. Da alle Daten lokal auf deinem Gerät liegen, kannst du diese Rechte jederzeit selbst ausüben.
+Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Datenübertragbarkeit. Lokale Daten kannst du jederzeit selbst löschen. Für Daten, die im Rahmen der Abo-Verwaltung bei RevenueCat verarbeitet werden (siehe 3.2), wende dich an die unter Abschnitt 8 genannte Kontaktadresse.
 
 ## 8. Kontakt
 

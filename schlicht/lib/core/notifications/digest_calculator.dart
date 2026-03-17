@@ -21,6 +21,7 @@ class DigestCalculator {
   static Future<DigestResult> calculate({
     required AppDatabase db,
     required String locale,
+    required String currency,
   }) async {
     final now = DateTime.now();
 
@@ -46,9 +47,10 @@ class DigestCalculator {
         : 0.0;
 
     final fullLocale = locale == 'en' ? 'en_US' : 'de_DE';
+    final symbol = currency == 'CHF' ? 'CHF' : '€';
     final fmt = NumberFormat.currency(
       locale: fullLocale,
-      symbol: locale == 'en' ? '€' : '€',
+      symbol: symbol,
       decimalDigits: 0,
     );
 

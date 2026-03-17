@@ -18,6 +18,28 @@ class NotificationService {
   static Future<void> initialize() async {
     tz.initializeTimeZones();
 
+    // Lokale Zeitzone setzen, damit _nextSunday10am() korrekt rechnet.
+    // Fallback auf UTC falls die Geraetezeitzone nicht gefunden wird.
+    try {
+      final deviceTz = DateTime.now().timeZoneName;
+      tz.setLocalLocation(tz.getLocation(deviceTz));
+    } on Object {
+      // timeZoneName liefert u.U. Abkuerzungen wie 'CET', die tz nicht kennt.
+      // In dem Fall versuchen wir den Offset-basierten Ansatz.
+      try {
+        final offset = DateTime.now().timeZoneOffset;
+        final locations = tz.timeZoneDatabase.locations.values.where(
+          (tz.Location loc) =>
+              loc.currentTimeZone.offset == offset.inMilliseconds,
+        );
+        if (locations.isNotEmpty) {
+          tz.setLocalLocation(locations.first);
+        }
+      } on Object {
+        // Kein Match gefunden — tz.local bleibt auf UTC.
+      }
+    }
+
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: false,

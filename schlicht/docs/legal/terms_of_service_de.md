@@ -4,7 +4,7 @@
 
 ## 1. Geltungsbereich
 
-Diese AGB gelten für die Nutzung der mobilen App „Schlicht" (nachfolgend „App").
+Diese AGB gelten für die Nutzung der mobilen App „Schlicht“ (nachfolgend „App“).
 
 ## 2. Leistungsbeschreibung
 
@@ -34,7 +34,7 @@ Abonnements können jederzeit über die Einstellungen des jeweiligen Stores (App
 
 ## 5. Gewährleistung und Haftung
 
-Die App wird „wie besehen" bereitgestellt. Wir übernehmen keine Gewähr für die Richtigkeit finanzieller Berechnungen. Die App ersetzt keine professionelle Finanzberatung.
+Die App wird „wie besehen“ bereitgestellt. Wir übernehmen keine Gewähr für die Richtigkeit finanzieller Berechnungen. Die App ersetzt keine professionelle Finanzberatung.
 
 Die Haftung ist auf Vorsatz und grobe Fahrlässigkeit beschränkt, soweit gesetzlich zulässig.
 
