@@ -82,13 +82,13 @@ class CategoryBarChart extends StatelessWidget {
               ),
             ),
             leftTitles: const AxisTitles(
-              
+              sideTitles: SideTitles(showTitles: false),
             ),
             topTitles: const AxisTitles(
-              
+              sideTitles: SideTitles(showTitles: false),
             ),
             rightTitles: const AxisTitles(
-              
+              sideTitles: SideTitles(showTitles: false),
             ),
           ),
           borderData: FlBorderData(show: false),

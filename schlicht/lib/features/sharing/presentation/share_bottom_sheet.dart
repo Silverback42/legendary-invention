@@ -130,7 +130,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
             clipBehavior: Clip.antiAlias,
             child: FittedBox(
               child: SizedBox(
-                width: _format == ShareFormat.story ? 1080 : 1080,
+                width: 1080,
                 height: _format == ShareFormat.story ? 1920 : 1080,
                 child: ShareImageWidget(
                   data: widget.data,

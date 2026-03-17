@@ -14,9 +14,15 @@ class MonthSelector extends StatelessWidget {
   final bool canGoForward;
 
   const MonthSelector({
-    required this.year, required this.month, required this.locale, required this.l10n, required this.onPrevious, required this.onNext, super.key,
+    required this.year,
+    required this.month,
+    required this.locale,
+    required this.l10n,
+    required this.onPrevious,
+    required this.onNext,
     this.canGoBack = true,
     this.canGoForward = true,
+    super.key,
   });
 
   @override

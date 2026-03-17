@@ -231,8 +231,11 @@ class _CategoryTile extends StatelessWidget {
   final VoidCallback? onDelete;
 
   const _CategoryTile({
-    required this.index, required this.category, required this.onEdit, super.key,
+    required this.index,
+    required this.category,
+    required this.onEdit,
     this.onDelete,
+    super.key,
   });
 
   @override
