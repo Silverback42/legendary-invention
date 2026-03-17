@@ -54,18 +54,26 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
     return List.generate(8, (_) => chars[rng.nextInt(chars.length)]).join();
   }
 
-  String _referralLink() => 'https://schlicht.app/invite/${_referral?.referralCode ?? ''}';
+  String _referralLink() {
+    final code = _referral?.referralCode;
+    if (code == null || code.isEmpty) return '';
+    return 'https://schlicht.app/invite/$code';
+  }
 
   Future<void> _share() async {
+    final link = _referralLink();
+    if (link.isEmpty) return;
     final l10n = AppLocalizations.of(context)!;
     await Share.share(
-      '${l10n.referralShareText}\n\n${_referralLink()}',
+      '${l10n.referralShareText}\n\n$link',
       subject: l10n.referralShareSubject,
     );
   }
 
   void _copy() {
-    Clipboard.setData(ClipboardData(text: _referralLink()));
+    final link = _referralLink();
+    if (link.isEmpty) return;
+    Clipboard.setData(ClipboardData(text: link));
     final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(l10n.referralCopied)),

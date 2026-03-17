@@ -115,6 +115,12 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       setState(() => _receiptPath = savedPath);
     } catch (e) {
       debugPrint('Fehler beim Foto-Aufnehmen: $e');
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.genericError)),
+        );
+      }
     }
   }
 
@@ -259,7 +265,17 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.close, color: Colors.white),
-                        onPressed: () => setState(() => _receiptPath = null),
+                        onPressed: () {
+                          final path = _receiptPath;
+                          if (path != null) {
+                            try {
+                              File(path).deleteSync();
+                            } catch (_) {
+                              // Fehler beim Löschen ignorieren
+                            }
+                          }
+                          setState(() => _receiptPath = null);
+                        },
                       ),
                     ],
                   )

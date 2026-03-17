@@ -94,8 +94,6 @@ class AppTheme {
       primary: _primary,
       secondary: _accent,
       surface: _surface,
-      background: _background,
-      onBackground: _onBackground,
       onSurface: _onSurface,
     );
 
@@ -178,14 +176,14 @@ class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: _background,
         indicatorColor: _accent.withOpacity(0.15),
-        iconTheme: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return const IconThemeData(color: _primary, size: 24);
           }
           return const IconThemeData(color: _subtle, size: 24);
         }),
-        labelTextStyle: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -299,8 +297,6 @@ class AppTheme {
       primary: _darkPrimary,
       secondary: _darkAccent,
       surface: _darkSurface,
-      background: _darkBackground,
-      onBackground: _darkOnBackground,
       onSurface: _darkOnSurface,
     );
 
@@ -379,14 +375,14 @@ class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: _darkBackground,
         indicatorColor: _darkAccent.withOpacity(0.15),
-        iconTheme: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return const IconThemeData(color: _darkPrimary, size: 24);
           }
           return const IconThemeData(color: _darkSubtle, size: 24);
         }),
-        labelTextStyle: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,

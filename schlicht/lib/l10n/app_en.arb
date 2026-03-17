@@ -262,6 +262,13 @@
   "exportButton": "Export as CSV",
   "exportFreeHint": "Free for all users.",
 
+  "csvHeaderDate": "Date",
+  "csvHeaderCategory": "Category",
+  "csvHeaderAmount": "Amount",
+  "csvHeaderCurrency": "Currency",
+  "csvHeaderNote": "Note",
+  "csvShareSubject": "Schlicht Export",
+
   "referralTitle": "Invite friends",
   "referralSubtitle": "Get a free month of Premium",
   "referralHeadline": "Invite your friends!",

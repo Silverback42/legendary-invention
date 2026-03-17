@@ -90,7 +90,7 @@ void main() async {
 class SchlichtApp extends ConsumerWidget {
   const SchlichtApp({super.key});
 
-  ThemeMode _resolveThemeMode(String mode) {
+  static ThemeMode _resolveThemeMode(String mode) {
     switch (mode) {
       case 'light':
         return ThemeMode.light;

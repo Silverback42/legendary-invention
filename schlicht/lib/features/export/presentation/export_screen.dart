@@ -47,19 +47,32 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
       final db = ref.read(databaseProvider);
       final settings = ref.read(appSettingsProvider);
 
+      // DST-sichere Berechnung des exklusiven Enddatums
+      final endExclusive = DateTime(_endDate.year, _endDate.month, _endDate.day + 1);
+
       final transactions = await db.getFilteredTransactions(
         startDate: _startDate,
-        endDate: _endDate.add(const Duration(days: 1)),
+        endDate: endExclusive,
         categoryId: _selectedCategoryId,
       );
 
       final categories = await db.getAllCategories();
+      final l10nExport = AppLocalizations.of(context)!;
+      final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
 
       await CsvExportService.exportAndShare(
         transactions: transactions,
         categories: categories,
         locale: settings.fullLocale,
         currencySymbol: settings.currencySymbol,
+        headerLabels: [
+          l10nExport.csvHeaderDate,
+          l10nExport.csvHeaderCategory,
+          l10nExport.csvHeaderAmount,
+          l10nExport.csvHeaderCurrency,
+          l10nExport.csvHeaderNote,
+        ],
+        shareSubject: '${l10nExport.csvShareSubject} $timestamp',
       );
     } catch (e) {
       if (mounted) {

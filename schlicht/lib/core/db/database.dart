@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -251,50 +252,71 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteRecurringExpense(int id) =>
       (delete(recurringExpenses)..where((r) => r.id.equals(id))).go();
 
-  /// Generiert Transaktionen fuer faellige wiederkehrende Ausgaben.
+  /// Generiert Transaktionen fuer alle faelligen Perioden wiederkehrender Ausgaben.
+  /// Berechnet die Serie geplanter Daten zwischen letzter Generierung und jetzt.
   Future<int> generateDueRecurringTransactions() async {
     final activeExpenses = await getAllActiveRecurringExpenses();
     final now = DateTime.now();
     var generated = 0;
 
     for (final expense in activeExpenses) {
-      final lastGenerated = expense.lastGeneratedAt;
-      final shouldGenerate = _isDue(expense, lastGenerated, now);
+      final occurrences = _computeOccurrences(expense, now);
+      if (occurrences.isEmpty) continue;
 
-      if (shouldGenerate) {
-        await transaction(() async {
+      await transaction(() async {
+        for (final scheduledDate in occurrences) {
           await into(transactions).insert(TransactionsCompanion(
             amount: Value(expense.amount),
             categoryId: Value(expense.categoryId),
             note: Value(expense.note),
-            date: Value(now),
+            date: Value(scheduledDate),
             recurringId: Value(expense.id),
           ));
+          generated++;
+        }
 
-          await (update(recurringExpenses)..where((r) => r.id.equals(expense.id)))
-              .write(RecurringExpensesCompanion(lastGeneratedAt: Value(now)));
-        });
-        generated++;
-      }
+        await (update(recurringExpenses)..where((r) => r.id.equals(expense.id)))
+            .write(RecurringExpensesCompanion(lastGeneratedAt: Value(occurrences.last)));
+      });
     }
     return generated;
   }
 
-  /// Prueft ob eine wiederkehrende Ausgabe faellig ist.
-  bool _isDue(RecurringExpense expense, DateTime? lastGenerated, DateTime now) {
-    if (lastGenerated == null) return true;
+  /// Berechnet alle faelligen Occurrence-Daten zwischen letzter Generierung und [now].
+  List<DateTime> _computeOccurrences(RecurringExpense expense, DateTime now) {
+    final occurrences = <DateTime>[];
+    var cursor = expense.lastGeneratedAt ?? expense.createdAt;
 
+    for (var i = 0; i < 365; i++) {
+      final nextDue = _nextScheduledDate(expense, cursor);
+      if (nextDue == null) break;
+      if (now.isBefore(nextDue)) break;
+      occurrences.add(nextDue);
+      cursor = nextDue;
+    }
+    return occurrences;
+  }
+
+  /// Berechnet das naechste geplante Datum basierend auf [cursor].
+  /// Clamped dayOfPeriod um Monatsüberlauf zu vermeiden.
+  DateTime? _nextScheduledDate(RecurringExpense expense, DateTime cursor) {
     switch (expense.frequency) {
       case 'weekly':
-        return now.difference(lastGenerated).inDays >= 7;
+        return cursor.add(const Duration(days: 7));
       case 'monthly':
-        final nextDue = DateTime(lastGenerated.year, lastGenerated.month + 1, expense.dayOfPeriod);
-        return now.isAfter(nextDue) || now.isAtSameMomentAs(nextDue);
+        final targetYear = cursor.month == 12 ? cursor.year + 1 : cursor.year;
+        final targetMonth = cursor.month == 12 ? 1 : cursor.month + 1;
+        final lastDay = DateTime(targetYear, targetMonth + 1, 0).day;
+        final day = min(expense.dayOfPeriod, lastDay);
+        return DateTime(targetYear, targetMonth, day);
       case 'yearly':
-        final nextDue = DateTime(lastGenerated.year + 1, lastGenerated.month, expense.dayOfPeriod);
-        return now.isAfter(nextDue) || now.isAtSameMomentAs(nextDue);
+        final targetYear = cursor.year + 1;
+        final targetMonth = cursor.month;
+        final lastDay = DateTime(targetYear, targetMonth + 1, 0).day;
+        final day = min(expense.dayOfPeriod, lastDay);
+        return DateTime(targetYear, targetMonth, day);
       default:
-        return false;
+        return null;
     }
   }
 
@@ -309,9 +331,10 @@ class AppDatabase extends _$AppDatabase {
       into(referrals).insert(entry);
 
   Future<void> incrementReferralCount(int id) async {
-    final current = await (select(referrals)..where((r) => r.id.equals(id))).getSingle();
-    await (update(referrals)..where((r) => r.id.equals(id))).write(
-      ReferralsCompanion(successfulCount: Value(current.successfulCount + 1)),
+    await customUpdate(
+      'UPDATE referrals SET successful_count = successful_count + 1 WHERE id = ?',
+      variables: [Variable.withInt(id)],
+      updates: {referrals},
     );
   }
 
@@ -344,12 +367,24 @@ class AppDatabase extends _$AppDatabase {
   // Utilities
   // ---------------------------------------------------------------------------
 
-  /// Clears all transactional and budget data.
-  /// Deliberately preserves [categories] and [accounts] as they represent
-  /// user configuration, not transactional records.
+  /// Loescht alle transaktionalen Daten inkl. Kassenbon-Dateien.
+  /// Bewahrt [categories] und [accounts] als Nutzer-Konfiguration.
   Future<void> clearAllData() async {
+    // Kassenbon-Dateien von der Platte entfernen
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final receiptsDir = Directory(p.join(dir.path, 'receipts'));
+      if (await receiptsDir.exists()) {
+        await receiptsDir.delete(recursive: true);
+      }
+    } catch (_) {
+      // Fehler beim Dateibereinigung nicht propagieren
+    }
+
     await delete(transactions).go();
     await delete(budgets).go();
+    await delete(recurringExpenses).go();
+    await delete(referrals).go();
   }
 }
 

@@ -262,6 +262,13 @@
   "exportButton": "Als CSV exportieren",
   "exportFreeHint": "Kostenlos für alle Nutzer.",
 
+  "csvHeaderDate": "Datum",
+  "csvHeaderCategory": "Kategorie",
+  "csvHeaderAmount": "Betrag",
+  "csvHeaderCurrency": "Waehrung",
+  "csvHeaderNote": "Notiz",
+  "csvShareSubject": "Schlicht Export",
+
   "referralTitle": "Freunde einladen",
   "referralSubtitle": "Premium-Monat geschenkt bekommen",
   "referralHeadline": "Lade Freunde ein!",

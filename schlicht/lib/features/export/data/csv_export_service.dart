@@ -11,18 +11,23 @@ import '../../../core/db/database.dart';
 /// Kostenlos fuer alle Nutzer.
 class CsvExportService {
   /// Erstellt eine CSV-Datei und oeffnet das Share-Sheet.
+  ///
+  /// [headerLabels] – lokalisierte Spaltenüberschriften (Datum, Kategorie, Betrag, Waehrung, Notiz).
+  /// [shareSubject] – lokalisierter Betreff für das Share-Sheet.
   static Future<void> exportAndShare({
     required List<Transaction> transactions,
     required List<Category> categories,
     required String locale,
     required String currencySymbol,
+    required List<String> headerLabels,
+    required String shareSubject,
   }) async {
     final categoryMap = {for (final c in categories) c.id: c.name};
     final dateFormat = DateFormat('yyyy-MM-dd', locale);
     final buffer = StringBuffer();
 
-    // Header
-    buffer.writeln('Datum,Kategorie,Betrag,Waehrung,Notiz');
+    // Lokalisierter Header
+    buffer.writeln(headerLabels.join(','));
 
     // Zeilen
     for (final t in transactions) {
@@ -42,15 +47,23 @@ class CsvExportService {
     // Teilen
     await Share.shareXFiles(
       [XFile(file.path, mimeType: 'text/csv')],
-      subject: 'Schlicht Export $timestamp',
+      subject: shareSubject,
     );
   }
 
-  /// Escaped einen Wert fuer CSV (Anführungszeichen bei Sonderzeichen).
+  /// Escaped einen Wert fuer CSV.
+  /// Neutralisiert Formel-Injection (=, +, -, @) und behandelt Sonderzeichen.
   static String _escapeCsv(String value) {
-    if (value.contains(',') || value.contains('"') || value.contains('\n')) {
-      return '"${value.replaceAll('"', '""')}"';
+    var safe = value;
+
+    // Formel-Injection verhindern
+    if (safe.isNotEmpty && '=+-@'.contains(safe[0])) {
+      safe = "'$safe";
     }
-    return value;
+
+    if (safe.contains(',') || safe.contains('"') || safe.contains('\n') || safe != value) {
+      return '"${safe.replaceAll('"', '""')}"';
+    }
+    return safe;
   }
 }

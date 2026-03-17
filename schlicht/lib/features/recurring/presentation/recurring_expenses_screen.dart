@@ -158,6 +158,12 @@ class RecurringExpensesScreen extends ConsumerWidget {
     String selectedFrequency = 'monthly';
     int dayOfPeriod = DateTime.now().day;
 
+    // Hilfsfunktion: dayOfPeriod passend zur Frequenz berechnen
+    int computeDayOfPeriod(String frequency) {
+      if (frequency == 'weekly') return DateTime.now().weekday;
+      return DateTime.now().day;
+    }
+
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -217,7 +223,10 @@ class RecurringExpensesScreen extends ConsumerWidget {
                   ButtonSegment(value: 'yearly', label: Text(l10n.frequencyYearly)),
                 ],
                 selected: {selectedFrequency},
-                onSelectionChanged: (v) => setSheetState(() => selectedFrequency = v.first),
+                onSelectionChanged: (v) => setSheetState(() {
+                  selectedFrequency = v.first;
+                  dayOfPeriod = computeDayOfPeriod(v.first);
+                }),
               ),
               const SizedBox(height: 20),
 
