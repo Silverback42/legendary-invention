@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class SkeletonShimmer extends StatefulWidget {
   final Widget child;
 
-  const SkeletonShimmer({super.key, required this.child});
+  const SkeletonShimmer({required this.child, super.key});
 
   @override
   State<SkeletonShimmer> createState() => _SkeletonShimmerState();
@@ -39,7 +39,6 @@ class _SkeletonShimmerState extends State<SkeletonShimmer>
         return ShaderMask(
           shaderCallback: (bounds) {
             return LinearGradient(
-              begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: const [
                 Color(0xFFE0E0E0),
@@ -69,9 +68,7 @@ class SkeletonBox extends StatelessWidget {
   final double borderRadius;
 
   const SkeletonBox({
-    super.key,
-    required this.width,
-    required this.height,
+    required this.width, required this.height, super.key,
     this.borderRadius = 8,
   });
 
@@ -113,36 +110,36 @@ class DashboardSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SkeletonShimmer(
+    return const SkeletonShimmer(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+        padding: EdgeInsets.fromLTRB(16, 8, 16, 80),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SkeletonBox(width: 120, height: 14),
-            const SizedBox(height: 16),
+            SkeletonBox(width: 120, height: 14),
+            SizedBox(height: 16),
             // Spending card
-            const SkeletonBox(width: double.infinity, height: 120, borderRadius: 16),
-            const SizedBox(height: 12),
+            SkeletonBox(width: double.infinity, height: 120, borderRadius: 16),
+            SizedBox(height: 12),
             // Chart card
-            const SkeletonBox(width: double.infinity, height: 200, borderRadius: 16),
-            const SizedBox(height: 12),
+            SkeletonBox(width: double.infinity, height: 200, borderRadius: 16),
+            SizedBox(height: 12),
             // Two small cards
             Row(
-              children: const [
+              children: [
                 Expanded(child: SkeletonBox(width: double.infinity, height: 100, borderRadius: 16)),
                 SizedBox(width: 12),
                 Expanded(child: SkeletonBox(width: double.infinity, height: 100, borderRadius: 16)),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             // Budget card
-            const SkeletonBox(width: double.infinity, height: 150, borderRadius: 16),
-            const SizedBox(height: 12),
+            SkeletonBox(width: double.infinity, height: 150, borderRadius: 16),
+            SizedBox(height: 12),
             // Recent transactions
-            const SkeletonBox(width: 140, height: 14),
-            const SizedBox(height: 8),
-            const SkeletonBox(width: double.infinity, height: 200, borderRadius: 16),
+            SkeletonBox(width: 140, height: 14),
+            SizedBox(height: 8),
+            SkeletonBox(width: double.infinity, height: 200, borderRadius: 16),
           ],
         ),
       ),
@@ -156,12 +153,12 @@ class HistorySkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SkeletonShimmer(
+    return const SkeletonShimmer(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+        padding: EdgeInsets.fromLTRB(16, 8, 16, 80),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             SkeletonBox(width: double.infinity, height: 100, borderRadius: 16),
             SizedBox(height: 16),
             SkeletonBox(width: 150, height: 14),

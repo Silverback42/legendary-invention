@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -17,7 +17,7 @@ class ExportScreen extends ConsumerStatefulWidget {
 }
 
 class _ExportScreenState extends ConsumerState<ExportScreen> {
-  DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
+  DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month);
   DateTime _endDate = DateTime.now();
   int? _selectedCategoryId;
   bool _exporting = false;

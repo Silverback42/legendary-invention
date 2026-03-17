@@ -156,7 +156,7 @@ final Map<LifeSituation, BudgetTemplate> budgetTemplates = {
     ],
   ),
 
-  LifeSituation.individual: BudgetTemplate(
+  LifeSituation.individual: const BudgetTemplate(
     situation: LifeSituation.individual,
     categories: [
       _groceries,

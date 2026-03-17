@@ -10,10 +10,8 @@ class CategoryBarChart extends StatelessWidget {
   final String Function(double amount) formatAmount;
 
   const CategoryBarChart({
-    super.key,
-    required this.data,
+    required this.data, required this.formatAmount, super.key,
     this.onBarTap,
-    required this.formatAmount,
   });
 
   @override
@@ -38,7 +36,7 @@ class CategoryBarChart extends StatelessWidget {
                 final d = data[group.x];
                 return BarTooltipItem(
                   '${d.name}\n${formatAmount(d.amount)}',
-                  TextStyle(
+                  const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
@@ -58,7 +56,6 @@ class CategoryBarChart extends StatelessWidget {
             },
           ),
           titlesData: FlTitlesData(
-            show: true,
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
@@ -72,7 +69,7 @@ class CategoryBarChart extends StatelessWidget {
                       ? '${data[index].name.substring(0, 5)}…'
                       : data[index].name;
                   return SideTitleWidget(
-                    meta: meta,
+                    axisSide: meta.axisSide,
                     child: Text(
                       label,
                       style: const TextStyle(
@@ -85,13 +82,13 @@ class CategoryBarChart extends StatelessWidget {
               ),
             ),
             leftTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
+              
             ),
             topTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
+              
             ),
             rightTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
+              
             ),
           ),
           borderData: FlBorderData(show: false),

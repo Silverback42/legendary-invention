@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -249,7 +249,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (ctx) => DraggableScrollableSheet(
-        initialChildSize: 0.5,
         minChildSize: 0.3,
         maxChildSize: 0.85,
         expand: false,
@@ -300,7 +299,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         return ListTile(
                           dense: true,
                           title: Text(
-                            tx.note?.isNotEmpty == true
+                            tx.note?.isNotEmpty ?? false
                                 ? tx.note!
                                 : category.name,
                           ),
@@ -584,13 +583,13 @@ class _ChartCard extends StatelessWidget {
             else if (showBar)
               CategoryBarChart(
                 data: chartData,
-                formatAmount: (a) => fmt.format(a),
+                formatAmount: fmt.format,
                 onBarTap: onCategoryTap,
               )
             else
               CategoryDonutChart(
                 data: chartData,
-                formatAmount: (a) => fmt.format(a),
+                formatAmount: fmt.format,
                 onSegmentTap: onCategoryTap,
               ),
           ],

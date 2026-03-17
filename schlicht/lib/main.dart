@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'core/db/database.dart';
-import 'core/routing/app_router.dart';
-import 'core/settings/app_settings.dart';
+import 'core/i18n/app_localizations.dart';
 import 'core/notifications/notification_provider.dart';
 import 'core/notifications/notification_service.dart';
-import 'core/widget/home_widget_service.dart';
+import 'core/routing/app_router.dart';
+import 'core/settings/app_settings.dart';
 import 'core/subscription/subscription_provider.dart';
 import 'core/subscription/subscription_service.dart';
 import 'core/theme/app_theme.dart';
-import 'core/i18n/app_localizations.dart';
+import 'core/widget/home_widget_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Locale-Daten fuer DateFormat initialisieren
+  await initializeDateFormatting('de');
+  await initializeDateFormatting('en');
 
   final db = AppDatabase();
 

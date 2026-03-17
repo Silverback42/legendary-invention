@@ -90,7 +90,6 @@ class AppTheme {
   static ThemeData get light {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: _primary,
-      brightness: Brightness.light,
       primary: _primary,
       secondary: _accent,
       surface: _surface,
@@ -119,14 +118,14 @@ class AppTheme {
       ),
 
       // Cards: minimal shadow, rounded
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: _surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: _divider),
         ),
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+        margin: const EdgeInsets.symmetric(vertical: 4),
       ),
 
       // Buttons: 44px min height (WCAG touch target)
@@ -321,14 +320,14 @@ class AppTheme {
         ),
       ),
 
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: _darkSurface,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: _darkDivider),
         ),
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+        margin: const EdgeInsets.symmetric(vertical: 4),
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(

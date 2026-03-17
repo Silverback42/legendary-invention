@@ -1,5 +1,6 @@
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/db/database.dart';
@@ -230,10 +231,7 @@ class _CategoryTile extends StatelessWidget {
   final VoidCallback? onDelete;
 
   const _CategoryTile({
-    super.key,
-    required this.index,
-    required this.category,
-    required this.onEdit,
+    required this.index, required this.category, required this.onEdit, super.key,
     this.onDelete,
   });
 

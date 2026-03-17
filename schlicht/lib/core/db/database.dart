@@ -73,8 +73,8 @@ class AppDatabase extends _$AppDatabase {
   // ---------------------------------------------------------------------------
 
   Stream<List<Transaction>> watchTransactionsForMonth(int year, int month) {
-    final startDate = DateTime(year, month, 1);
-    final endDate = DateTime(year, month + 1, 1);
+    final startDate = DateTime(year, month);
+    final endDate = DateTime(year, month + 1);
     return (select(transactions)
           ..where((t) =>
               t.date.isBiggerOrEqualValue(startDate) &
@@ -84,8 +84,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<Transaction>> getTransactionsForMonth(int year, int month) {
-    final startDate = DateTime(year, month, 1);
-    final endDate = DateTime(year, month + 1, 1);
+    final startDate = DateTime(year, month);
+    final endDate = DateTime(year, month + 1);
     return (select(transactions)
           ..where((t) =>
               t.date.isBiggerOrEqualValue(startDate) &
@@ -105,8 +105,8 @@ class AppDatabase extends _$AppDatabase {
 
   /// Returns total spending per category for a given month via a grouped SQL query.
   Future<Map<int, double>> getSpendingByCategory(int year, int month) async {
-    final startDate = DateTime(year, month, 1);
-    final endDate = DateTime(year, month + 1, 1);
+    final startDate = DateTime(year, month);
+    final endDate = DateTime(year, month + 1);
 
     final catId = transactions.categoryId;
     final total = transactions.amount.sum();
@@ -128,8 +128,8 @@ class AppDatabase extends _$AppDatabase {
 
   /// Returns total spending for a given month (sum of all transactions).
   Future<double> getTotalSpendingForMonth(int year, int month) async {
-    final startDate = DateTime(year, month, 1);
-    final endDate = DateTime(year, month + 1, 1);
+    final startDate = DateTime(year, month);
+    final endDate = DateTime(year, month + 1);
 
     final total = transactions.amount.sum();
     final query = selectOnly(transactions)

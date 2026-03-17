@@ -128,8 +128,8 @@ class SubscriptionService {
 
     try {
       final result = await Purchases.purchasePackage(package);
-      final entitlement =
-          result.entitlements.all[SubscriptionConstants.premiumEntitlement];
+      final entitlement = result
+          .customerInfo.entitlements.all[SubscriptionConstants.premiumEntitlement];
       return entitlement != null && entitlement.isActive;
     } catch (e) {
       debugPrint('Purchase failed: $e');

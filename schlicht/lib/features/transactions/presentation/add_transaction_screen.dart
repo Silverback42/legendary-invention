@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -211,7 +211,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
         children: [
           // --- Amount display ---
           Padding(
@@ -342,7 +343,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             ),
           ),
 
-          const Spacer(),
+          const SizedBox(height: 24),
 
           // --- Numpad ---
           _Numpad(onTap: _onNumpadTap),
@@ -369,6 +370,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -398,7 +400,6 @@ class _CategoryGrid extends StatelessWidget {
         crossAxisCount: 4,
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
-        childAspectRatio: 1,
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {

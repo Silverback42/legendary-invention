@@ -44,12 +44,10 @@ class ShareImageService {
     final renderView = RenderView(
       view: ui.PlatformDispatcher.instance.implicitView!,
       child: RenderPositionedBox(
-        alignment: Alignment.center,
         child: repaintBoundary,
       ),
       configuration: ViewConfiguration(
         logicalConstraints: BoxConstraints.tight(size),
-        devicePixelRatio: 1.0,
       ),
     );
 
@@ -78,7 +76,7 @@ class ShareImageService {
     pipelineOwner.flushCompositingBits();
     pipelineOwner.flushPaint();
 
-    final image = await repaintBoundary.toImage(pixelRatio: 1.0);
+    final image = await repaintBoundary.toImage();
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     image.dispose();
 
@@ -107,6 +105,6 @@ class ShareImageService {
 
   /// Teilt das generierte Bild ueber das System-Share-Sheet.
   static Future<void> shareImage(XFile file) async {
-    await SharePlus.instance.share(ShareParams(files: [file]));
+    await Share.shareXFiles([file]);
   }
 }

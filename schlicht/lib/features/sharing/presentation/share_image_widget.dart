@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../../shared/widgets/category_donut_chart.dart';
 import '../services/share_image_service.dart';
@@ -15,9 +15,7 @@ class ShareImageWidget extends StatelessWidget {
   final ShareFormat format;
 
   const ShareImageWidget({
-    super.key,
-    required this.data,
-    required this.format,
+    required this.data, required this.format, super.key,
   });
 
   @override
@@ -46,11 +44,11 @@ class _StoryLayout extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 80),
       child: Column(
         children: [
-          const Spacer(flex: 1),
+          const Spacer(),
           // Monats-Header
           _MonthHeader(data: data, fontSize: 42),
           const SizedBox(height: 16),
-          Text(
+          const Text(
             'Schlicht',
             style: TextStyle(
               fontSize: 22,
@@ -59,7 +57,7 @@ class _StoryLayout extends StatelessWidget {
               letterSpacing: 1.2,
             ),
           ),
-          const Spacer(flex: 1),
+          const Spacer(),
           // Donut-Chart
           _ShareDonutChart(data: data, size: 340),
           const SizedBox(height: 56),
@@ -90,7 +88,7 @@ class _SquareLayout extends StatelessWidget {
           // Monats-Header
           _MonthHeader(data: data, fontSize: 36),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Schlicht',
             style: TextStyle(
               fontSize: 18,
@@ -99,7 +97,7 @@ class _SquareLayout extends StatelessWidget {
               letterSpacing: 1.2,
             ),
           ),
-          const Spacer(flex: 1),
+          const Spacer(),
           // Chart + Legende nebeneinander
           Row(
             children: [
@@ -114,7 +112,7 @@ class _SquareLayout extends StatelessWidget {
               ),
             ],
           ),
-          const Spacer(flex: 1),
+          const Spacer(),
           // Branding-Footer
           const _BrandingFooter(fontSize: 18),
         ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 /// Wiederverwendbarer Monatswähler mit Vor-/Zurück-Navigation.
@@ -14,13 +14,7 @@ class MonthSelector extends StatelessWidget {
   final bool canGoForward;
 
   const MonthSelector({
-    super.key,
-    required this.year,
-    required this.month,
-    required this.locale,
-    required this.l10n,
-    required this.onPrevious,
-    required this.onNext,
+    required this.year, required this.month, required this.locale, required this.l10n, required this.onPrevious, required this.onNext, super.key,
     this.canGoBack = true,
     this.canGoForward = true,
   });

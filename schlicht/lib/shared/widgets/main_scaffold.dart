@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/routing/app_router.dart';
@@ -7,7 +7,7 @@ import '../../core/routing/app_router.dart';
 class MainScaffold extends StatelessWidget {
   final Widget child;
 
-  const MainScaffold({super.key, required this.child});
+  const MainScaffold({required this.child, super.key});
 
   @override
   Widget build(BuildContext context) {

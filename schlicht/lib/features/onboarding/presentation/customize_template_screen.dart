@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,7 +15,7 @@ import '../data/budget_templates.dart';
 class CustomizeTemplateScreen extends ConsumerStatefulWidget {
   final int situationIndex;
 
-  const CustomizeTemplateScreen({super.key, required this.situationIndex});
+  const CustomizeTemplateScreen({required this.situationIndex, super.key});
 
   @override
   ConsumerState<CustomizeTemplateScreen> createState() =>
@@ -35,7 +35,7 @@ class _CustomizeTemplateScreenState
     final template = budgetTemplates[situation] ??
         budgetTemplates[LifeSituation.individual]!;
     _categories = template.categories
-        .map((c) => _EditableCategory.fromTemplate(c))
+        .map(_EditableCategory.fromTemplate)
         .toList();
   }
 

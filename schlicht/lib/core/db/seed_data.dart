@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
 
-import 'tables.dart';
+import 'database.dart';
 
 /// 8 default categories as specified in the PRD.
 /// Icons are stored as Material Symbol names (e.g., 'shopping_cart') — mapped to codepoints in the UI layer.

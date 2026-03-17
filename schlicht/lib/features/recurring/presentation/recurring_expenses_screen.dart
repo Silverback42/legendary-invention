@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -79,7 +79,7 @@ class RecurringExpensesScreen extends ConsumerWidget {
                       child: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
                     ),
                     confirmDismiss: (_) async {
-                      return await showDialog<bool>(
+                      return showDialog<bool>(
                         context: context,
                         builder: (ctx) => AlertDialog(
                           title: Text(l10n.deleteRecurring),
