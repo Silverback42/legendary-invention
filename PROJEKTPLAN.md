@@ -160,37 +160,37 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 > **Ziel: Features, die fuer Akquise und Retention kritisch sind, vor dem Launch einbauen.**
 
 ### Teilbare Monatsuebersicht (R-011)
-- [ ] Generierung einer Grafik (9:16 fuer Stories, 1:1 fuer WhatsApp)
-- [ ] Inhalt: Kategorie-Verteilung in Prozent (keine Betraege!)
-- [ ] Schlicht-Branding + App-Store-Link
-- [ ] Share-Sheet oeffnen (Flutter share_plus)
-- [ ] Button auf Dashboard: "Monat teilen"
+- [x] Generierung einer Grafik (9:16 fuer Stories, 1:1 fuer WhatsApp)
+- [x] Inhalt: Kategorie-Verteilung in Prozent (keine Betraege!)
+- [x] Schlicht-Branding + App-Store-Link
+- [x] Share-Sheet oeffnen (Flutter share_plus)
+- [x] Button auf Dashboard: "Monat teilen"
 
 ### Homescreen-Widget (R-012)
-- [ ] iOS: WidgetKit-Integration (home_widget Package)
-- [ ] Android: Glance/AppWidget-Integration
-- [ ] Anzeige: Verbleibendes Budget des aktuellen Monats
-- [ ] Aktualisierung alle 15 Minuten
+- [x] iOS: WidgetKit-Integration (home_widget Package)
+- [x] Android: Glance/AppWidget-Integration
+- [x] Anzeige: Verbleibendes Budget des aktuellen Monats
+- [x] Aktualisierung alle 15 Minuten
 
 ### Reverse Trial (R-008)
-- [ ] RevenueCat-Integration (Subscription-Management)
-- [ ] 14-Tage-Trial: Alle Premium-Features sofort aktiv
-- [ ] Paywall-Screen im Onboarding (nach Vorlagen-Auswahl)
-- [ ] Automatischer Downgrade nach 14 Tagen (kein Kreditkarten-Zwang)
-- [ ] Premium-Badge in UI fuer Features die nach Trial wegfallen
-- [ ] Restore-Purchase-Funktion
+- [x] RevenueCat-Integration (Subscription-Management)
+- [x] 14-Tage-Trial: Alle Premium-Features sofort aktiv
+- [x] Paywall-Screen im Onboarding (nach Vorlagen-Auswahl)
+- [x] Automatischer Downgrade nach 14 Tagen (kein Kreditkarten-Zwang)
+- [x] Premium-Badge in UI fuer Features die nach Trial wegfallen
+- [x] Restore-Purchase-Funktion
 
 ### Wöchentlicher Digest (R-017)
-- [ ] Firebase Cloud Messaging Setup
-- [ ] Lokale Notification-Logik: Sonntag 10:00 Uhr
-- [ ] Inhalt: "Diese Woche: €X ausgegeben, €Y unter/ueber Budget"
-- [ ] Positive Tonalitaet, abschaltbar in Einstellungen
-- [ ] Notification-Permissions abfragen (iOS)
+- [x] Firebase Cloud Messaging Setup
+- [x] Lokale Notification-Logik: Sonntag 10:00 Uhr
+- [x] Inhalt: "Diese Woche: €X ausgegeben, €Y unter/ueber Budget"
+- [x] Positive Tonalitaet, abschaltbar in Einstellungen
+- [x] Notification-Permissions abfragen (iOS)
 
 ### App-Store-Vorbereitung
-- [ ] App-Store-Texte (DE + EN) schreiben
-- [ ] 5 Screenshots erstellen (DE)
-- [ ] Privacy-Policy + AGB erstellen (DSGVO-konform)
+- [x] App-Store-Texte (DE + EN) schreiben
+- [x] 5 Screenshots erstellen (DE)
+- [x] Privacy-Policy + AGB erstellen (DSGVO-konform)
 - [ ] App-Store-Kategorie: Finanzen
 - [ ] TestFlight / Google Play Internal Testing einrichten
 - [ ] Beta mit 50-200 Nutzern (4 Wochen vor Launch)
@@ -341,7 +341,7 @@ Umfassender Implementierungsplan für Schlicht basierend auf PRD v2.0. Greenfiel
 | Phase 1a: Manuelle Eingabe (Kern-MVP) | **Abgeschlossen** | Woche 2-3 |
 | Phase 1b: Visualisierung & Budgets | **Abgeschlossen** | Woche 4-5 |
 | Phase 1c: Onboarding & Polish | **Abgeschlossen** | Woche 6-7 |
-| Phase 1d: Launch-Features | Offen | Woche 8-10 |
-| Phase 1.5: Post-Launch Quick Wins | Offen | Woche 11-14 |
+| Phase 1d: Launch-Features | **Abgeschlossen** (Code) | Woche 8-10 |
+| Phase 1.5: Post-Launch Quick Wins | **Abgeschlossen** (Code) | Woche 11-14 |
 | Phase 2: Cloud & Shared Budgets | Offen | Monat 4-6 |
 | Phase 3: KI & Erweiterungen | Offen | Monat 7-12 |

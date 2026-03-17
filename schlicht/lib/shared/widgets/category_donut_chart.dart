@@ -27,10 +27,8 @@ class CategoryDonutChart extends StatefulWidget {
   final String Function(double amount) formatAmount;
 
   const CategoryDonutChart({
-    super.key,
-    required this.data,
+    required this.data, required this.formatAmount, super.key,
     this.onSegmentTap,
-    required this.formatAmount,
   });
 
   @override

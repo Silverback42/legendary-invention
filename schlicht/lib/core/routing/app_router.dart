@@ -52,7 +52,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     initialLocation: AppRoutes.dashboard,
-    debugLogDiagnostics: false,
     redirect: (context, state) {
       final onboarded = settings.hasCompletedOnboarding;
       final isOnboarding =

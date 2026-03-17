@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -124,7 +124,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final trialDays = SubscriptionConstants.trialDurationDays;
+    const trialDays = SubscriptionConstants.trialDurationDays;
 
     return Scaffold(
       body: SafeArea(
@@ -259,7 +259,6 @@ class _FeatureRow extends StatelessWidget {
             child: Text(label, style: theme.textTheme.bodyMedium),
           ),
           Expanded(
-            flex: 1,
             child: Text(
               freeValue,
               textAlign: TextAlign.center,
@@ -267,7 +266,6 @@ class _FeatureRow extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 1,
             child: Text(
               premiumValue,
               textAlign: TextAlign.center,

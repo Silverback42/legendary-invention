@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +19,7 @@ import '../../../shared/utils/category_icon.dart';
 class EditTransactionScreen extends ConsumerStatefulWidget {
   final int transactionId;
 
-  const EditTransactionScreen({super.key, required this.transactionId});
+  const EditTransactionScreen({required this.transactionId, super.key});
 
   @override
   ConsumerState<EditTransactionScreen> createState() =>

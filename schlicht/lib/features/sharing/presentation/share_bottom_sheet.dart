@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 import '../../../shared/widgets/category_donut_chart.dart';
 import '../services/share_image_service.dart';
@@ -9,7 +9,7 @@ import 'share_image_widget.dart';
 class ShareBottomSheet extends StatefulWidget {
   final ShareData data;
 
-  const ShareBottomSheet({super.key, required this.data});
+  const ShareBottomSheet({required this.data, super.key});
 
   /// Zeigt das Share-BottomSheet an.
   static Future<void> show(BuildContext context, ShareData data) {
@@ -129,9 +129,8 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
             ),
             clipBehavior: Clip.antiAlias,
             child: FittedBox(
-              fit: BoxFit.contain,
               child: SizedBox(
-                width: _format == ShareFormat.story ? 1080 : 1080,
+                width: 1080,
                 height: _format == ShareFormat.story ? 1920 : 1080,
                 child: ShareImageWidget(
                   data: widget.data,

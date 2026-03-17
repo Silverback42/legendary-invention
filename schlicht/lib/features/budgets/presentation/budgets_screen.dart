@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:intl/intl.dart';
@@ -286,7 +286,7 @@ class _BudgetCategoryTile extends StatelessWidget {
               onPressed: () => Navigator.pop(ctx, -1.0), // signal: delete
               child: Text(
                 l10n.delete,
-                style: TextStyle(color: AppTheme.budgetOver),
+                style: const TextStyle(color: AppTheme.budgetOver),
               ),
             ),
           TextButton(

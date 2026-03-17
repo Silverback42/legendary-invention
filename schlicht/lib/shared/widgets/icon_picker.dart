@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 import '../utils/category_icon.dart';
 
@@ -27,7 +27,6 @@ class _IconPickerSheet extends StatelessWidget {
     final entries = allCategoryIcons.entries.toList();
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.5,
       minChildSize: 0.3,
       maxChildSize: 0.7,
       expand: false,
@@ -53,7 +52,7 @@ class _IconPickerSheet extends StatelessWidget {
                 final isSelected = entry.key == current;
                 return GestureDetector(
                   onTap: () => Navigator.pop(ctx, entry.key),
-                  child: Container(
+                  child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: isSelected
                           ? theme.colorScheme.primary.withValues(alpha: 0.12)

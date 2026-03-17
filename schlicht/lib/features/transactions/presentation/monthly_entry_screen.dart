@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -43,7 +43,7 @@ class _MonthlyEntryScreenState extends ConsumerState<MonthlyEntryScreen> {
   TextEditingController _controllerFor(int categoryId) {
     return _controllers.putIfAbsent(
       categoryId,
-      () => TextEditingController(),
+      TextEditingController.new,
     );
   }
 
@@ -68,7 +68,7 @@ class _MonthlyEntryScreenState extends ConsumerState<MonthlyEntryScreen> {
 
     try {
       final db = ref.read(databaseProvider);
-      final date = DateTime(_selectedMonth.year, _selectedMonth.month, 1);
+      final date = DateTime(_selectedMonth.year, _selectedMonth.month);
       final monthLabel = DateFormat.yMMMM(settings.fullLocale).format(date);
 
       for (final cat in categories) {
